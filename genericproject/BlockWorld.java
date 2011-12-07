@@ -11,6 +11,15 @@ public class BlockWorld {
 	public BlockWorld()
 	{
 		blocks = new Vector<Block>();
+		buildTestWorld();
+	}
+	
+	/**
+	 * This is just for simple testing methods and will be removed later. 
+	 */
+	public void buildTestWorld()
+	{
+		blocks.removeAllElements();
 		blocks.add(new Block(0, 0, 0, Block.TYPE_DIRT));
 		blocks.add(new Block(0, 1, 0, Block.TYPE_WOOD));
 		blocks.add(new Block(0, 2, 0, Block.TYPE_WOOD));
@@ -28,10 +37,32 @@ public class BlockWorld {
 		blocks.add(new Block(1, 0, 0, Block.TYPE_DIRT));
 		blocks.add(new Block(-1, 0, 0, Block.TYPE_GRASS));
 		blocks.add(new Block(-1, 0, 1, Block.TYPE_GRASS));
-		blocks.add(new Block(0, 0, 1, Block.TYPE_WATER));
+		blocks.add(new Block(0, 0, 1, Block.TYPE_WATER));	
+		blocks.add(new Block(3, 0, 0, Block.TYPE_DIRT));
 		
+		for(int x=-8; x<9;x++)
+		{
+			for(int z=-8; z<9; z++)
+			{
+				blocks.add(new Block(x, -2, z, Block.TYPE_GRASS));
+			}
+		}
+		System.out.println("blockworld created. containing "+blocks.size()+" blocks");
 	}
 	
+	/**
+	 * loading the block world given by the filename. this will replace the existing world
+	 * @param filename
+	 */
+	public void loadMapFromFile(String filename)
+	{
+		blocks.removeAllElements();
+	}
+	
+	/**
+	 * render method. render this block world
+	 * @param drawable
+	 */
 	public void render(GLAutoDrawable drawable)
 	{
 		for(int i=0; i<blocks.size(); i++)

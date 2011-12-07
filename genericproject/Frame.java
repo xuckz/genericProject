@@ -36,7 +36,9 @@ public class Frame extends JFrame
     private Graphics gfx;
    
 
-    /** Creates new form MainFrame */
+    /**
+     * create a new frame
+     */
     public Frame() {
         initComponents();
         

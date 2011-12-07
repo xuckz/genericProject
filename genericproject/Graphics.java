@@ -20,6 +20,9 @@ public class Graphics implements GLEventListener
     	blockworld = new BlockWorld();
     }
     
+    /**
+     * init the openGL drawing
+     */
     public void init(GLAutoDrawable drawable) 
     {
     	w = drawable.getWidth();
@@ -40,16 +43,27 @@ public class Graphics implements GLEventListener
     	cam_position_z = 18f;
     }
     
+    /**
+     * move the camera along the z-axis
+     * @param distance 
+     */
     public void moveCamera(float distance)
     {
     	cam_position_z += distance;
     }
     
+    /** 
+     * rotate the camera around the y-axis
+     * @param angle
+     */
     public void rotateCamera(float angle)
     {
     	this.angle += angle;
     }
 
+    /**
+     * clear the view and start drawing
+     */
     public void display(GLAutoDrawable drawable) 
     {
         GL2 gl = drawable.getGL().getGL2();
@@ -72,6 +86,9 @@ public class Graphics implements GLEventListener
         drawScene(drawable);												// Draw the scene
     }
 
+    /**
+     * adjust the view to the new window size 
+     */
 	public void reshape(GLAutoDrawable drawable, int x, int y, int w2, int h2) 
     {
 		GL2 gl = drawable.getGL().getGL2();
@@ -93,6 +110,10 @@ public class Graphics implements GLEventListener
     {      
     }
     
+    /**
+     * draw the scene. this moves the world in the correct position relative to the camera
+     * @param drawable
+     */
     public void drawScene(GLAutoDrawable drawable)
     {
     	GL2 gl = drawable.getGL().getGL2();
@@ -106,100 +127,15 @@ public class Graphics implements GLEventListener
     	drawGraph(drawable);
     }
     
+    /**
+     * draw all elements
+     * @param drawable
+     */
     private void drawGraph(GLAutoDrawable drawable)
     {
     	blockworld.render(drawable);
     }
     
-    private void drawBox(GLAutoDrawable drawable)
-    {
-    	GL2 gl = drawable.getGL().getGL2();;
-    	
-    	gl.glPushMatrix();
-    	gl.glBegin(GL2.GL_QUADS);										// Begin drawing square bottom
-		
-		gl.glColor3f( 0.0f, 0.0f, 1.0f);
-		gl.glVertex3f(0.0f,0.0f, 0.0f);								
-		gl.glVertex3f(-1.0f,0.0f, 0.0f);
-		gl.glVertex3f(-1.0f,1.0f, 0.0f);
-		gl.glVertex3f( 0.0f,1.0f, 0.0f);	
-		
-		gl.glColor3f( 0.0f, 1.0f, 0.0f);
-		gl.glVertex3f(0.0f,0.0f, 0.0f);								
-		gl.glVertex3f(0.0f,0.0f, 1.0f);
-		gl.glVertex3f(0.0f,1.0f, 1.0f);
-		gl.glVertex3f( 0.0f,1.0f, 0.0f);	
-		
-		gl.glColor3f( 0.0f, 1.0f, 1.0f);
-		gl.glVertex3f(0.0f,0.0f, 0.0f);								
-		gl.glVertex3f(-1.0f,0.0f, 0.0f);
-		gl.glVertex3f(-1.0f,0.0f, 1.0f);
-		gl.glVertex3f( 0.0f,0.0f, 1.0f);
-		
-		gl.glColor3f( 1.0f, 0.0f, 0.0f);
-		gl.glVertex3f(-1.0f,0.0f, 1.0f);								
-		gl.glVertex3f(-1.0f,0.0f, 0.0f);
-		gl.glVertex3f(-1.0f,1.0f, 0.0f);
-		gl.glVertex3f(-1.0f,1.0f, 1.0f);
-		
-		gl.glColor3f( 1.0f, 0.0f, 1.0f);
-		gl.glVertex3f(-1.0f,0.0f, 1.0f);								
-		gl.glVertex3f(0.0f,0.0f, 1.0f);
-		gl.glVertex3f(0.0f,1.0f, 1.0f);
-		gl.glVertex3f(-1.0f,1.0f, 1.0f);
-		
-		gl.glColor3f( 1.0f, 1.0f, 0.0f);
-		gl.glVertex3f(0.0f,1.0f, 0.0f);								
-		gl.glVertex3f(0.0f,1.0f, 1.0f);
-		gl.glVertex3f(-1.0f,1.0f, 1.0f);
-		gl.glVertex3f(-1.0f,1.0f, 0.0f);
-		
-		gl.glEnd();														// Finish drawing square bottom
-		gl.glPopMatrix();
-    }
-    
-    public void drawPyramid(GLAutoDrawable drawable)
-    {
-GL2 gl = drawable.getGL().getGL2();;
-    	
-    	gl.glPushMatrix();
-			gl.glBegin(GL2.GL_TRIANGLES);									// Begin drawing triangle sides
-			
-			gl.glColor3f( 1.0f, 0.0f, 0.0f);								// Set colour to red
-			gl.glVertex3f( 0.0f, 1.0f, 1.0f);								// Top vertex
-			gl.glVertex3f(-1.0f,-1.0f, 0.0f);								// Bottom left vertex
-			gl.glVertex3f( 1.0f,-1.0f, 0.0f);								// Bottom right vertex
-			
-			gl.glColor3f( 0.0f, 1.0f, 0.0f);								// Set colour to green
-			gl.glVertex3f( 0.0f, 1.0f, 1.0f);								// Top vertex
-			gl.glVertex3f(-1.0f,-1.0f, 2.0f);								// Bottom left vertex
-			gl.glVertex3f( -1.0f,-1.0f, 0.0f);								// Bottom right vertex
-			
-			gl.glColor3f( 0.0f, 0.0f, 1.0f);								// Set colour to blue
-			gl.glVertex3f( 0.0f, 1.0f, 1.0f);								// Top vertex
-			gl.glVertex3f(-1.0f,-1.0f, 2.0f);								// Bottom left vertex
-			gl.glVertex3f( 1.0f,-1.0f, 2.0f);								// Bottom right vertex
-			
-			gl.glColor3f( 0.5f, 0.0f, 0.5f);								// Set colour to purple
-			gl.glVertex3f( 0.0f, 1.0f, 1.0f);								// Top vertex
-			gl.glVertex3f( 1.0f,-1.0f, 0.0f);								// Bottom left vertex
-			gl.glVertex3f( 1.0f,-1.0f, 2.0f);								// Bottom right vertex
-			gl.glEnd();														// Finish drawing triangle sides
-		gl.glPopMatrix();
-	
-		gl.glPushMatrix();
-			gl.glBegin(GL2.GL_QUADS);										// Begin drawing square bottom
-			
-			gl.glColor3f( 1.0f, 1.0f, 0.0f);								// Set colour to yellow
-			gl.glVertex3f(-1.0f,-1.0f, 0.0f);								// Bottom left vertex
-			gl.glVertex3f(-1.0f,-1.0f, 2.0f);								// Top left vertex
-			gl.glVertex3f( 1.0f,-1.0f, 2.0f);								// Bottom right vertex
-			gl.glVertex3f( 1.0f,-1.0f, 0.0f);								// Top right vertex
-			
-			gl.glEnd();														// Finish drawing square bottom
-		gl.glPopMatrix();
-    }
-
 	@Override
 	public void dispose(GLAutoDrawable arg0) {
 		// TODO Auto-generated method stub
