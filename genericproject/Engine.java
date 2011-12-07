@@ -1,4 +1,9 @@
 package genericproject;
+/**
+ * to build this project you need to download the JOGL libraries and add them to your build path.
+ * you can find the latest release at:
+ * http://jogamp.org/deployment/jogamp-current/archive/
+ */
 
 import java.awt.EventQueue;
 import java.util.logging.Level;
