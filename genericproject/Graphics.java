@@ -39,6 +39,16 @@ public class Graphics implements GLEventListener
     	cam_position_y = 3f;
     	cam_position_z = 18f;
     }
+    
+    public void moveCamera(float distance)
+    {
+    	cam_position_z += distance;
+    }
+    
+    public void rotateCamera(float angle)
+    {
+    	this.angle += angle;
+    }
 
     public void display(GLAutoDrawable drawable) 
     {
@@ -85,7 +95,6 @@ public class Graphics implements GLEventListener
     
     public void drawScene(GLAutoDrawable drawable)
     {
-    	angle++;
     	GL2 gl = drawable.getGL().getGL2();
     	
     	gl.glMatrixMode(GL2.GL_MODELVIEW);

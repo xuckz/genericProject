@@ -2,6 +2,8 @@ package genericproject;
 
 import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.logging.Level;
@@ -31,6 +33,7 @@ public class Frame extends JFrame
     }
     
     private FPSAnimator animator;
+    private Graphics gfx;
    
 
     /** Creates new form MainFrame */
@@ -39,7 +42,7 @@ public class Frame extends JFrame
         
         setTitle("3D engine");
         
-        Graphics gfx = new Graphics();
+        gfx = new Graphics();
 
         canvas.addGLEventListener(gfx);
         
@@ -47,7 +50,31 @@ public class Frame extends JFrame
         animator.add(canvas);
 
         // This is a workaround for the GLCanvas not adjusting its size, when the frame is resized.
-        canvas.setMinimumSize(new Dimension());         
+        canvas.setMinimumSize(new Dimension());    
+        
+        canvas.addKeyListener(new KeyAdapter() 
+        {
+        	public void keyPressed(KeyEvent ke) 
+        	{  
+                int kc = ke.getKeyCode();
+                if (kc == ke.VK_DOWN) {     
+                        // back
+                        gfx.moveCamera(0.5f);
+                } else if (kc == ke.VK_LEFT) {
+                        // turn left
+                		gfx.rotateCamera(2f);
+                        
+                } else if (kc == ke.VK_UP) {
+                		// forth
+                        gfx.moveCamera(-0.5f);
+
+                } else if (kc == ke.VK_RIGHT) {
+                        // turn right
+                	gfx.rotateCamera(-2f);
+                }
+        	}
+        });
+		
         
         this.addWindowListener(new WindowAdapter() {
 
