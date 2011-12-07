@@ -26,6 +26,8 @@ public class BlockWorld {
 		blocks.add(new Block(1, 0, 2, Block.TYPE_SAND));
 		blocks.add(new Block(1, 0, 1, Block.TYPE_SAND));
 		blocks.add(new Block(1, 0, 0, Block.TYPE_DIRT));
+		blocks.add(new Block(-1, 0, 0, Block.TYPE_GRASS));
+		blocks.add(new Block(-1, 0, 1, Block.TYPE_GRASS));
 		
 	}
 	
