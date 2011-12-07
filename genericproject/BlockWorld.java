@@ -22,6 +22,7 @@ public class BlockWorld {
 		blocks.add(new Block(0, 3, -1, Block.TYPE_LEAF));
 		blocks.add(new Block(3, 0, 2, Block.TYPE_ROCK));
 		blocks.add(new Block(2, 0, 2, Block.TYPE_ROCK));
+		blocks.add(new Block(2, 1, 2, Block.TYPE_ROCK));
 		blocks.add(new Block(1, 0, 2, Block.TYPE_SAND));
 		blocks.add(new Block(1, 0, 1, Block.TYPE_SAND));
 		blocks.add(new Block(1, 0, 0, Block.TYPE_DIRT));
