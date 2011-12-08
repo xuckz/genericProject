@@ -11,43 +11,67 @@ public class BlockWorld {
 	public BlockWorld()
 	{
 		blocks = new Vector<Block>();
-		buildTestWorld();
+		generateRandomMap();
+	}
+	
+	
+	
+	private void generateRandomMap()
+	{
+		blocks.removeAllElements();
+		
+		for(int x = -99; x < 100; x++)
+		{
+			for(int z = - 99; z < 100; z++)
+			{
+				blocks.add(new Block(x, 0, z, (int)(Math.random()*3)));
+				if(Math.random() < 0.002f)
+				{
+					generateTree(x, 0, z);
+				}
+			}
+		}
+		blocks.add(new Block(0, 1, 0, Block.TYPE_ROCK));
+		blocks.add(new Block(0, 2, 0, Block.TYPE_ROCK));
+		blocks.add(new Block(-1, 1, 0, Block.TYPE_ROCK));
+		blocks.add(new Block(1, 1, 0, Block.TYPE_ROCK));
+		blocks.add(new Block(0, 1, -1, Block.TYPE_ROCK));
+		blocks.add(new Block(0, 1, 1, Block.TYPE_ROCK));
+		
+		System.out.println("blockworld created. containing "+blocks.size()+" blocks");
 	}
 	
 	/**
-	 * This is just for simple testing methods and will be removed later. 
+	 * place a tree on top of the block at x, y, z
+	 * @param x
+	 * @param y
+	 * @param z
 	 */
-	public void buildTestWorld()
+	private void generateTree(float x, float y, float z)
 	{
-		blocks.removeAllElements();
-		blocks.add(new Block(0, 0, 0, Block.TYPE_DIRT));
-		blocks.add(new Block(0, 1, 0, Block.TYPE_WOOD));
-		blocks.add(new Block(0, 2, 0, Block.TYPE_WOOD));
-		blocks.add(new Block(0, 3, 0, Block.TYPE_LEAF));
-		blocks.add(new Block(0, 4, 0, Block.TYPE_LEAF));
-		blocks.add(new Block(1, 3, 0, Block.TYPE_LEAF));
-		blocks.add(new Block(-1, 3, 0, Block.TYPE_LEAF));
-		blocks.add(new Block(0, 3, 1, Block.TYPE_LEAF));
-		blocks.add(new Block(0, 3, -1, Block.TYPE_LEAF));
-		blocks.add(new Block(3, 0, 2, Block.TYPE_ROCK));
-		blocks.add(new Block(2, 0, 2, Block.TYPE_ROCK));
-		blocks.add(new Block(2, 1, 2, Block.TYPE_ROCK));
-		blocks.add(new Block(1, 0, 2, Block.TYPE_SAND));
-		blocks.add(new Block(1, 0, 1, Block.TYPE_SAND));
-		blocks.add(new Block(1, 0, 0, Block.TYPE_DIRT));
-		blocks.add(new Block(-1, 0, 0, Block.TYPE_GRASS));
-		blocks.add(new Block(-1, 0, 1, Block.TYPE_GRASS));
-		blocks.add(new Block(0, 0, 1, Block.TYPE_WATER));	
-		blocks.add(new Block(3, 0, 0, Block.TYPE_DIRT));
+		blocks.add(new Block(x, y+1, z, Block.TYPE_WOOD));
+		blocks.add(new Block(x, y+2, z, Block.TYPE_WOOD));
+		blocks.add(new Block(x, y+3, z, Block.TYPE_WOOD));
+		blocks.add(new Block(x, y+4, z, Block.TYPE_WOOD));
+		blocks.add(new Block(x, y+5, z, Block.TYPE_WOOD));
+		blocks.add(new Block(x, y+6, z, Block.TYPE_LEAF));
+		blocks.add(new Block(x+1, y+4, z, Block.TYPE_LEAF));
+		blocks.add(new Block(x-1, y+4, z, Block.TYPE_LEAF));
+		blocks.add(new Block(x, y+4, z+1, Block.TYPE_LEAF));
+		blocks.add(new Block(x, y+4, z-1, Block.TYPE_LEAF));
+		blocks.add(new Block(x-1, y+5, z-1, Block.TYPE_LEAF));
+		blocks.add(new Block(x-1, y+5, z, Block.TYPE_LEAF));
+		blocks.add(new Block(x-1, y+5, z+1, Block.TYPE_LEAF));
+		blocks.add(new Block(x, y+5, z-1, Block.TYPE_LEAF));
+		blocks.add(new Block(x, y+5, z+1, Block.TYPE_LEAF));
+		blocks.add(new Block(x+1, y+5, z-1, Block.TYPE_LEAF));
+		blocks.add(new Block(x+1, y+5, z, Block.TYPE_LEAF));
+		blocks.add(new Block(x+1, y+5, z+1, Block.TYPE_LEAF));
+		blocks.add(new Block(x+1, y+6, z, Block.TYPE_LEAF));
+		blocks.add(new Block(x-1, y+6, z, Block.TYPE_LEAF));
+		blocks.add(new Block(x, y+6, z+1, Block.TYPE_LEAF));
+		blocks.add(new Block(x, y+6, z-1, Block.TYPE_LEAF));
 		
-		for(int x=-32; x<33;x++)
-		{
-			for(int z=-32; z<33; z++)
-			{
-				blocks.add(new Block(x, -2, z, (int)(Math.random()*3)));
-			}
-		}
-		System.out.println("blockworld created. containing "+blocks.size()+" blocks");
 	}
 	
 	/**

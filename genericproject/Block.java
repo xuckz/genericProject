@@ -32,7 +32,7 @@ public class Block {
 	final static float[] COLOR_GRASS = {0.43f, 0.81f, 0.28f, 1f};
 	final static float[] COLOR_WATER = {0.13f, 0.34f, 0.84f, 0.7f};
 	
-	final static float BOX_SIZE = 1f;
+	final static float BOX_SIZE = 0.5f;
 	
 	/**
 	 * the points of the standard box
