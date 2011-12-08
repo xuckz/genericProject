@@ -7,11 +7,15 @@ import javax.media.opengl.GLAutoDrawable;
 public class BlockWorld {
 
 	Vector<Block> blocks;
+	Vector<BoundingBox> boundingBoxes;
 	
 	public BlockWorld()
 	{
 		blocks = new Vector<Block>();
+		boundingBoxes = new Vector<BoundingBox>();
 		generateRandomMap();
+		divideIntoBoudingBoxes();
+		framecounter = 0;
 	}
 	
 	
@@ -75,6 +79,35 @@ public class BlockWorld {
 	}
 	
 	/**
+	 * put the blocks from the root node into different bounding boxes
+	 * this method should be put into it's own helper class (maybe factory)
+	 */
+	private void divideIntoBoudingBoxes()
+	{
+		for(int x=-99; x < 100; x+=20)
+		{
+			for(int z=-99; z < 100; z+=20)
+			{
+				boundingBoxes.add(new BoundingBox(x, 0, z, 20));
+			}
+		}
+		
+		// now sort the boxes into the bounding boxes
+		while(blocks.size() > 0)
+		{
+			Block block = blocks.remove(0);
+			for(int i=0; i<boundingBoxes.size(); i++)
+			{
+				if( boundingBoxes.get(i).containsBlock(block) )
+				{
+					boundingBoxes.get(i).add(block);
+					i = boundingBoxes.size();
+				}
+			}
+		}
+	}
+	
+	/**
 	 * loading the block world given by the filename. this will replace the existing world
 	 * @param filename
 	 */
@@ -87,9 +120,24 @@ public class BlockWorld {
 	 * render method. render this block world
 	 * @param drawable
 	 */
-	public void render(GLAutoDrawable drawable)
-	{
-		for(int i=0; i<blocks.size(); i++)
-			blocks.get(i).render(drawable);
+	public void render(GLAutoDrawable drawable, float x, float y, float z, float angle)
+	{	
+		framecounter++;
+		if(framecounter > 40)
+		{
+			Block.debug_counter = 0;
+		}
+		for(int i=0; i<boundingBoxes.size(); i++)
+		{
+			if(boundingBoxes.get(i).isVisible(x, y, z, angle) )
+				boundingBoxes.get(i).render(drawable);
+		}
+		if(framecounter > 40)
+		{
+			System.out.println("rendered "+Block.debug_counter+" blocks");
+			framecounter = 0;
+		}
 	}
+	
+	int framecounter;
 }

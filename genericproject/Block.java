@@ -5,6 +5,8 @@ import javax.media.opengl.GLAutoDrawable;
 
 public class Block {
 	
+	static int debug_counter;
+	
 	float pos_x;
 	float pos_y;
 	float pos_z;
@@ -78,6 +80,7 @@ public class Block {
 	 */
 	public void render(GLAutoDrawable drawable)
 	{
+		debug_counter++;
 		GL2 gl = drawable.getGL().getGL2();;
     	
     	gl.glPushMatrix();

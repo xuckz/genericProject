@@ -35,7 +35,7 @@ public class Graphics implements GLEventListener
         GL2 gl = drawable.getGL().getGL2();
         glu = new GLU();
         
-        //gl.glShadeModel(GL.GL_LINE_SMOOTH);
+        gl.glShadeModel(GL.GL_LINE_SMOOTH);
         gl.glClearColor(0.0f,0.0f,0.0f,1.0f);
         gl.glClearDepth(1.0f);												// Depth Buffer Setup
     	gl.glEnable(GL2.GL_DEPTH_TEST);										// Enables Depth Testing
@@ -143,7 +143,7 @@ public class Graphics implements GLEventListener
      */
     private void drawGraph(GLAutoDrawable drawable)
     {
-    	blockworld.render(drawable);
+    	blockworld.render(drawable, cam_position_x, cam_position_y, cam_position_z, angle);
     }
     
 	@Override
