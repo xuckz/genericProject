@@ -40,11 +40,11 @@ public class BlockWorld {
 		blocks.add(new Block(0, 0, 1, Block.TYPE_WATER));	
 		blocks.add(new Block(3, 0, 0, Block.TYPE_DIRT));
 		
-		for(int x=-8; x<9;x++)
+		for(int x=-32; x<33;x++)
 		{
-			for(int z=-8; z<9; z++)
+			for(int z=-32; z<33; z++)
 			{
-				blocks.add(new Block(x, -2, z, Block.TYPE_GRASS));
+				blocks.add(new Block(x, -2, z, (int)(Math.random()*3)));
 			}
 		}
 		System.out.println("blockworld created. containing "+blocks.size()+" blocks");

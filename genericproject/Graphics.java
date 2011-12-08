@@ -13,6 +13,10 @@ public class Graphics implements GLEventListener
     private float cam_position_y;
     private float cam_position_z;
     
+	float[] lightPosition = {3.4f, 14f, 2.2f, 1f};
+	float[] lightColorAmbient = {0.2f, 0.15f, 0.15f, .3f};
+	float[] lightColorSpecular = {0.8f, 0.8f, 0.8f, .8f};
+    
     private BlockWorld blockworld;
       
     public Graphics()
@@ -32,10 +36,11 @@ public class Graphics implements GLEventListener
         glu = new GLU();
         
         //gl.glShadeModel(GL.GL_LINE_SMOOTH);
-        gl.glClearColor(0.0f,0.0f,0.0f,0.0f);
+        gl.glClearColor(0.0f,0.0f,0.0f,1.0f);
         gl.glClearDepth(1.0f);												// Depth Buffer Setup
     	gl.glEnable(GL2.GL_DEPTH_TEST);										// Enables Depth Testing
-    	gl.glDepthFunc(GL2.GL_LEQUAL);										// The Type Of Depth Test To Do
+    	gl.glDepthFunc(GL2.GL_LESS);										// The Type Of Depth Test To Do
+    	gl.glShadeModel(GL2.GL_SMOOTH);
     	gl.glHint(GL2.GL_PERSPECTIVE_CORRECTION_HINT, GL2.GL_NICEST);			// Really Nice Perspective Calculations
     	
     	cam_position_x = 0f;
@@ -74,6 +79,19 @@ public class Graphics implements GLEventListener
         gl.glClear(GL2.GL_COLOR_BUFFER_BIT|GL2.GL_DEPTH_BUFFER_BIT);			// Clear the colour and depth buffer
           
         gl.glViewport(0, 0, w, h);											// Reset The Current Viewport
+        
+        // Set light parameters.
+        gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_POSITION, lightPosition, 0);
+        gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_AMBIENT, lightColorAmbient, 0);
+        gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_SPECULAR, lightColorSpecular, 0);
+        
+        gl.glLightf(GL2.GL_LIGHT1, GL2.GL_CONSTANT_ATTENUATION, 1.0f);
+        gl.glLightf(GL2.GL_LIGHT1, GL2.GL_LINEAR_ATTENUATION, 0.01f);
+        gl.glLightf(GL2.GL_LIGHT1, GL2.GL_QUADRATIC_ATTENUATION, 0.001f);
+        
+        gl.glEnable(GL2.GL_LIGHT1);
+        gl.glEnable(GL2.GL_LIGHTING);
+        gl.glCullFace(GL2.GL_BACK);
         
         gl.glMatrixMode(GL2.GL_PROJECTION);									// Select The Projection Matrix
         gl.glLoadIdentity();												// Reset The Projection Matrix

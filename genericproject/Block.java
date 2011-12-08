@@ -32,6 +32,26 @@ public class Block {
 	final static float[] COLOR_GRASS = {0.43f, 0.81f, 0.28f, 1f};
 	final static float[] COLOR_WATER = {0.13f, 0.34f, 0.84f, 0.7f};
 	
+	final static float BOX_SIZE = 1f;
+	
+	/**
+	 * the points of the standard box
+	 *    F -- G
+	 *   /    /|
+	 *  E -- H |
+	 *  | B  | C
+	 *  |/   |/ 
+	 *  A -- D
+	 */
+	final static float[] BOX_POINT_A = {0f, 0f, 0f};
+	final static float[] BOX_POINT_B = {0f, 0f, BOX_SIZE};
+	final static float[] BOX_POINT_C = {BOX_SIZE, 0f, BOX_SIZE};
+	final static float[] BOX_POINT_D = {BOX_SIZE, 0f, 0f};
+	final static float[] BOX_POINT_E = {0f, BOX_SIZE, 0f};
+	final static float[] BOX_POINT_F = {0f, BOX_SIZE, BOX_SIZE};
+	final static float[] BOX_POINT_G = {BOX_SIZE, BOX_SIZE, BOX_SIZE};
+	final static float[] BOX_POINT_H = {BOX_SIZE, BOX_SIZE, 0f};
+	
 	/**
 	 * map to retrieve the correct color for each block type
 	 */
@@ -61,41 +81,56 @@ public class Block {
 		GL2 gl = drawable.getGL().getGL2();;
     	
     	gl.glPushMatrix();
-    	gl.glTranslatef(pos_x, pos_y, pos_z);
+    	gl.glTranslatef(pos_x * BOX_SIZE, pos_y * BOX_SIZE, pos_z * BOX_SIZE);
     	gl.glBegin(GL2.GL_QUADS);										// Begin drawing square bottom
 		
-		gl.glColor4f( COLOR_MAP[type][0], COLOR_MAP[type][1], COLOR_MAP[type][2], COLOR_MAP[type][3]);
+		//gl.glColor4f( COLOR_MAP[type][0], COLOR_MAP[type][1], COLOR_MAP[type][2], COLOR_MAP[type][3]);
+    	
+    	gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_AMBIENT, COLOR_MAP[type], 0);
+    	gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_SPECULAR, COLOR_MAP[type], 0);
+    	gl.glMaterialf(GL2.GL_FRONT, GL2.GL_SHININESS, 0.2f);
 		
-		//TODO: make sure that the sides are facing in the correct direction
-		gl.glVertex3f(0.0f,0.0f, 0.0f);								
-		gl.glVertex3f(1.0f,0.0f, 0.0f);
-		gl.glVertex3f(1.0f,1.0f, 0.0f);
-		gl.glVertex3f( 0.0f,1.0f, 0.0f);	
+    	// bottom ABCD
+    	gl.glNormal3f(0f, -1f, 0f);
+		gl.glVertex3fv(BOX_POINT_A, 0);								
+		gl.glVertex3fv(BOX_POINT_B, 0);
+		gl.glVertex3fv(BOX_POINT_C, 0);
+		gl.glVertex3fv(BOX_POINT_D, 0);	
 		
-		gl.glVertex3f(0.0f,0.0f, 0.0f);								
-		gl.glVertex3f(0.0f,0.0f, 1.0f);
-		gl.glVertex3f(0.0f,1.0f, 1.0f);
-		gl.glVertex3f( 0.0f,1.0f, 0.0f);	
+		// front ADHE
+		gl.glNormal3f(0f, 0f, -1f);
+		gl.glVertex3fv(BOX_POINT_A, 0);								
+		gl.glVertex3fv(BOX_POINT_D, 0);
+		gl.glVertex3fv(BOX_POINT_H, 0);
+		gl.glVertex3fv(BOX_POINT_E, 0);	
 		
-		gl.glVertex3f(0.0f,0.0f, 0.0f);								
-		gl.glVertex3f(1.0f,0.0f, 0.0f);
-		gl.glVertex3f(1.0f,0.0f, 1.0f);
-		gl.glVertex3f( 0.0f,0.0f, 1.0f);
+		// left AEFB
+		gl.glNormal3f(-1f, 0f, 0f);
+		gl.glVertex3fv(BOX_POINT_A, 0);								
+		gl.glVertex3fv(BOX_POINT_E, 0);
+		gl.glVertex3fv(BOX_POINT_F, 0);
+		gl.glVertex3fv(BOX_POINT_B, 0);
 		
-		gl.glVertex3f(1.0f,0.0f, 1.0f);								
-		gl.glVertex3f(1.0f,0.0f, 0.0f);
-		gl.glVertex3f(1.0f,1.0f, 0.0f);
-		gl.glVertex3f(1.0f,1.0f, 1.0f);
+		// back BFGC
+		gl.glNormal3f(0f, 0f, 1f);
+		gl.glVertex3fv(BOX_POINT_B, 0);								
+		gl.glVertex3fv(BOX_POINT_F, 0);
+		gl.glVertex3fv(BOX_POINT_G, 0);
+		gl.glVertex3fv(BOX_POINT_C, 0);
 		
-		gl.glVertex3f(1.0f,0.0f, 1.0f);								
-		gl.glVertex3f(0.0f,0.0f, 1.0f);
-		gl.glVertex3f(0.0f,1.0f, 1.0f);
-		gl.glVertex3f(1.0f,1.0f, 1.0f);
+		// right DCGH
+		gl.glNormal3f(1f, 0f, 0f);
+		gl.glVertex3fv(BOX_POINT_D, 0);								
+		gl.glVertex3fv(BOX_POINT_C, 0);
+		gl.glVertex3fv(BOX_POINT_G, 0);
+		gl.glVertex3fv(BOX_POINT_H, 0);
 		
-		gl.glVertex3f(0.0f,1.0f, 0.0f);								
-		gl.glVertex3f(0.0f,1.0f, 1.0f);
-		gl.glVertex3f(1.0f,1.0f, 1.0f);
-		gl.glVertex3f(1.0f,1.0f, 0.0f);
+		// top EHGF
+		gl.glNormal3f(0f, 1f, 0f);
+		gl.glVertex3fv(BOX_POINT_E, 0);								
+		gl.glVertex3fv(BOX_POINT_H, 0);
+		gl.glVertex3fv(BOX_POINT_G, 0);
+		gl.glVertex3fv(BOX_POINT_F, 0);
 		
 		gl.glEnd();														// Finish drawing square bottom
 		gl.glPopMatrix();
