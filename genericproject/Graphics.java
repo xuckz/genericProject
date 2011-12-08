@@ -13,15 +13,15 @@ public class Graphics implements GLEventListener
     private float cam_position_y;
     private float cam_position_z;
     
-	float[] lightPosition = {3.4f, 14f, 2.2f, 1f};
-	float[] lightColorAmbient = {0.2f, 0.15f, 0.15f, .3f};
-	float[] lightColorSpecular = {0.8f, 0.8f, 0.8f, .8f};
-    
     private BlockWorld blockworld;
+    private LightSource light1;
       
     public Graphics()
     {  
     	blockworld = new BlockWorld();
+    	light1 = new LightSource(GL2.GL_LIGHT1, 3.4f, 14f, 2.2f, 1f);
+    	light1.setColorAmbient(0.2f, 0.15f, 0.15f, 0.3f);
+    	light1.setColorSpecular(0.8f, 0.8f, 0.8f, 0.8f);
     }
     
     /**
@@ -80,17 +80,9 @@ public class Graphics implements GLEventListener
           
         gl.glViewport(0, 0, w, h);											// Reset The Current Viewport
         
-        // Set light parameters.
-        gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_POSITION, lightPosition, 0);
-        gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_AMBIENT, lightColorAmbient, 0);
-        gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_SPECULAR, lightColorSpecular, 0);
-        
-        gl.glLightf(GL2.GL_LIGHT1, GL2.GL_CONSTANT_ATTENUATION, 1.0f);
-        gl.glLightf(GL2.GL_LIGHT1, GL2.GL_LINEAR_ATTENUATION, 0.01f);
-        gl.glLightf(GL2.GL_LIGHT1, GL2.GL_QUADRATIC_ATTENUATION, 0.001f);
-        
-        gl.glEnable(GL2.GL_LIGHT1);
         gl.glEnable(GL2.GL_LIGHTING);
+        light1.render(gl);
+        
         gl.glCullFace(GL2.GL_BACK);
         
         gl.glMatrixMode(GL2.GL_PROJECTION);									// Select The Projection Matrix
