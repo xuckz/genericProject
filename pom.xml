@@ -46,6 +46,20 @@
 			<scope>system</scope>
 			<systemPath>${project.basedir}/lib/gluegen-rt-natives-linux-amd64.jar</systemPath>
 		</dependency>
+		<dependency>
+			<groupId>com.jogamp.jogl</groupId>
+			<artifactId>jogl-all-natives-windows-amd64</artifactId>
+			<version>${jogl.version}</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/lib/jogl-all-natives-windows-amd64.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>com.jogamp.jogl</groupId>
+			<artifactId>gluegen-rt-natives-windows-amd64</artifactId>
+			<version>${jogl.version}</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/lib/gluegen-rt-natives-windows-amd64.jar</systemPath>
+		</dependency>
 	</dependencies>
 
 </project>
