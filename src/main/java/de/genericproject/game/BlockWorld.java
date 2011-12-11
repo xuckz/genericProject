@@ -4,7 +4,15 @@ import java.util.Vector;
 
 import javax.media.opengl.GLAutoDrawable;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import de.genericproject.game.fileimport.ModelReader;
+import de.genericproject.game.fileimport.VoxelData;
+import de.genericproject.game.fileimport.binvox.BinvoxReader;
+
 public class BlockWorld {
+	final static Logger log = LoggerFactory.getLogger(BlockWorld.class);
 
 	Vector<Block> blocks;
 	Vector<BoundingBox> boundingBoxes;
@@ -24,13 +32,18 @@ public class BlockWorld {
 	{
 		blocks.removeAllElements();
 		
+		VoxelData v = loadModelFromFile("chevalier.binvox");
+		if(v != null) {
+			addModel(v, -30, -50, 2);
+		}
+		
 		for(int x = -99; x < 100; x++)
 		{
 			for(int z = - 99; z < 100; z++)
 			{
 				blocks.add(new Block(x, 0, z, (int)(Math.random()*3)));
 				if(Math.random() < 0.002f)
-				{
+				{				
 					generateTree(x, 0, z);
 				}
 			}
@@ -78,17 +91,36 @@ public class BlockWorld {
 		
 	}
 	
+	private VoxelData loadModelFromFile(String filename) {
+		ModelReader modelReader = new BinvoxReader();
+		VoxelData voxelData = null;
+		voxelData = modelReader.read(filename);
+		return voxelData;
+	}
+	
+	private void addModel(VoxelData data, float x, float y, float z) {	
+		for(int m_x = 0; m_x < data.getDepth(); m_x++) {
+			for(int m_y = 0; m_y < data.getHeight(); m_y++) {
+				 for(int m_z = 0; m_z < data.getWidth(); m_z++) {
+					if(data.getVoxel(m_x, m_y, m_z) != 0) {
+						blocks.add(new Block(x + m_x, z + m_z, y + m_y, Block.TYPE_ROCK));
+					}
+				}
+			}
+		}
+	}
+	
 	/**
 	 * put the blocks from the root node into different bounding boxes
 	 * this method should be put into it's own helper class (maybe factory)
 	 */
 	private void divideIntoBoudingBoxes()
 	{
-		for(int x=-99; x < 100; x+=20)
+		for(int x=-99; x < 100; x+=100)
 		{
-			for(int z=-99; z < 100; z+=20)
+			for(int z=-99; z < 100; z+=100)
 			{
-				boundingBoxes.add(new BoundingBox(x, 0, z, 20));
+				boundingBoxes.add(new BoundingBox(x, 0, z, 100));
 			}
 		}
 		
