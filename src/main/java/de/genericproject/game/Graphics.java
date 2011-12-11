@@ -188,50 +188,50 @@ public class Graphics implements GLEventListener, KeyListener
     {
         if(keys['w'])
         {
-            cameraZPosition -= 0.1;
-            cameraLZPosition -= 0.1;
+            cameraZPosition -= 0.5;
+            cameraLZPosition -= 0.5;
 
-            camera.moveForward(0.1);
+            camera.moveForward(0.5);
             camera.look(10);
 
         }
 
         if(keys['s'])
         {
-            cameraZPosition += 0.1;
-            cameraLZPosition += 0.1;
+            cameraZPosition += 0.5;
+            cameraLZPosition += 0.5;
 
-            camera.moveForward(-0.1);
+            camera.moveForward(-0.5);
             camera.look(10);
         }
 
         if(keys['j'])
         {
-            camera.pitchUp(0.05);
+            camera.pitchUp(0.1);
             camera.look(10);
         }
 
         if(keys['k'])
         {
-            camera.pitchDown(0.05);
+            camera.pitchDown(0.1);
             camera.look(10);
         }
 
         if(keys['q'])
         {
-            camera.yawLeft(0.01);
+            camera.yawLeft(0.05);
             camera.look(10);
         }
 
         if(keys['e'])
         {
-            camera.yawRight(0.01);
+            camera.yawRight(0.05);
             camera.look(10);
         }
 
         if(keys['a'])
         {
-            camera.strafeLeft(0.1);
+            camera.strafeLeft(0.5);
             camera.look(10);
 
 			System.out.print("moving left");
@@ -239,7 +239,7 @@ public class Graphics implements GLEventListener, KeyListener
 
         if(keys['d'])
         {
-            camera.strafeRight(0.1);
+            camera.strafeRight(0.5);
             camera.look(10);
         }
 	}

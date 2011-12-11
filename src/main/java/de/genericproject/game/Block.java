@@ -64,6 +64,16 @@ public class Block {
 	private FloatBuffer colorBuffer;
 	private FloatBuffer normalsBuffer;
 	private IntBuffer indicesBuffer;
+
+	final static float[] COLOR_DIRT = {0.82f, 0.48f, 0.18f, 1f};
+	final static float[] COLOR_ROCK = {0.67f, 0.63f, 0.60f, 1f};
+	final static float[] COLOR_SAND = {0.96f, 0.93f, 0.22f, 1f};
+	final static float[] COLOR_WOOD = {0.69f, 0.41f, 0.01f, 1f};
+	final static float[] COLOR_LEAF = {0.53f, 0.91f, 0.28f, 1f};
+	final static float[] COLOR_GRASS = {0.43f, 0.81f, 0.28f, 1f};
+	final static float[] COLOR_WATER = {0.13f, 0.34f, 0.84f, 0.7f};
+
+	final static float[][] COLOR_MAP = {COLOR_DIRT, COLOR_ROCK, COLOR_SAND, COLOR_WOOD, COLOR_LEAF, COLOR_GRASS, COLOR_WATER};
 	/**
 	 * map to retrieve the correct color for each block type
 	 */
@@ -77,6 +87,10 @@ public class Block {
 	 */
 	public Block(float x, float y, float z, int type)
 	{
+		x = x/2;
+		y = y/2;
+		z = z/2;
+
 		vertices = new float[]
 		{
 			BOX_SIZE + x, 	BOX_SIZE + y , 	0f + z , 			0f + x , 		BOX_SIZE + y, 	0f + z,  			0f + x, 		0f + y, 		0f + z,  		BOX_SIZE + x, 	0f + y, 		0f + z,        	// h-e-a-d
@@ -132,23 +146,23 @@ public class Block {
 	{
 		GL2 gl = drawable.getGL().getGL2();
 
-		gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_AMBIENT, new float[]{0.82f, 0.48f, 0.18f, 1f}, 0);
-    	gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_SPECULAR, new float[]{0.82f, 0.48f, 0.18f, 1f}, 0);
+		gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_AMBIENT, COLOR_MAP[type], 0);
+    	gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_SPECULAR, COLOR_MAP[type], 0);
     	gl.glMaterialf(GL2.GL_FRONT, GL2.GL_SHININESS, 0.2f);
 
 		// Enable and specificy pointers to vertex arrays
 		gl.glEnableClientState(GL2.GL_VERTEX_ARRAY);
 		gl.glEnableClientState(GL2.GL_INDEX_ARRAY);
-		gl.glEnableClientState(GL2.GL_COLOR_ARRAY);
+		//gl.glEnableClientState(GL2.GL_COLOR_ARRAY);
 
 		gl.glVertexPointer(3, GL2.GL_FLOAT, 0, vertexBuffer);
 		gl.glIndexPointer(GL2.GL_INT, 0, indicesBuffer);
-		gl.glColorPointer(3, GL2.GL_FLOAT, 0, colorBuffer);
+		//gl.glColorPointer(3, GL2.GL_FLOAT, 0, colorBuffer);
 		gl.glDrawElements(GL2.GL_QUADS, 24, GL2.GL_UNSIGNED_INT, indicesBuffer);
 
 		gl.glDisableClientState(GL2.GL_VERTEX_ARRAY);
 		gl.glDisableClientState(GL2.GL_INDEX_ARRAY);
-		gl.glDisableClientState(GL2.GL_COLOR_ARRAY);
+		//gl.glDisableClientState(GL2.GL_COLOR_ARRAY);
 
 /*		debug_counter++;
 		GL2 gl = drawable.getGL().getGL2();;
