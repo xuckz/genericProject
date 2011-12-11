@@ -1,10 +1,14 @@
 package de.genericproject.game;
 
-import javax.media.opengl.*;
-import javax.media.opengl.glu.*;
+import javax.media.opengl.GL;
+import javax.media.opengl.GL2;
+import javax.media.opengl.GLAutoDrawable;
+import javax.media.opengl.GLEventListener;
+import javax.media.opengl.glu.GLU;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
-public class Graphics implements GLEventListener
+public class Graphics implements GLEventListener, KeyListener
 {
     private GLU glu;
     private int w, h;
@@ -12,20 +16,34 @@ public class Graphics implements GLEventListener
     private BlockWorld blockworld;
     private LightSource light1;
 
+	private boolean[] keys;
+
+	private float zoom = 10.0f;
+    private float cameraXPosition = 0.0f;
+    private float cameraYPosition = 0.0f;
+    private float cameraZPosition = 10.0f;
+
+    private float cameraLXPosition = cameraXPosition;
+    private float cameraLYPosition = cameraYPosition;
+    private float cameraLZPosition = cameraZPosition - zoom;
+
 	Camera camera;
       
     public Graphics()
     {  
-    	blockworld = new BlockWorld();
-    	light1 = new LightSource(GL2.GL_LIGHT1, 3.4f, 14f, 2.2f, 1f);
-    	light1.setColorAmbient(0.2f, 0.15f, 0.15f, 0.3f);
-    	light1.setColorSpecular(0.8f, 0.8f, 0.8f, 0.8f);
+    	// boolean array for keyboard input
+        keys = new boolean[256];
 
 		camera = new Camera();
         camera.yawLeft(0);
         camera.pitchDown(0.0);
         camera.moveForward(-10);
         camera.look(10);
+
+    	blockworld = new BlockWorld();
+    	light1 = new LightSource(GL2.GL_LIGHT1, 3.4f, 14f, 2.2f, 1f);
+    	light1.setColorAmbient(0.2f, 0.15f, 0.15f, 0.3f);
+    	light1.setColorSpecular(0.8f, 0.8f, 0.8f, 0.8f);
     }
     
     /**
@@ -48,8 +66,10 @@ public class Graphics implements GLEventListener
     	gl.glHint(GL2.GL_PERSPECTIVE_CORRECTION_HINT, GL2.GL_NICEST);			// Really Nice Perspective Calculations
 
 
-		        gl.glViewport(0, 0, w, h);											// Reset The Current Viewport
-    }
+		gl.glViewport(0, 0, w, h);											// Reset The Current Viewport
+		gl.glCullFace(GL2.GL_FRONT);
+		gl.glEnable(GL2.GL_CULL_FACE);
+	}
 
     /**
      * clear the view and start drawing
@@ -60,13 +80,13 @@ public class Graphics implements GLEventListener
         
         w = drawable.getWidth();
         h = drawable.getHeight();
+
+	   	keyboardChecks();
         
         gl.glClear(GL2.GL_COLOR_BUFFER_BIT|GL2.GL_DEPTH_BUFFER_BIT);			// Clear the colour and depth buffer
         
         gl.glEnable(GL2.GL_LIGHTING);
         light1.render(gl);
-        
-        gl.glCullFace(GL2.GL_BACK);
         
         gl.glMatrixMode(GL2.GL_PROJECTION);					// Select The Projection Matrix
         gl.glLoadIdentity();							// Reset The Projection Matrix
@@ -132,33 +152,96 @@ public class Graphics implements GLEventListener
 		
 	}
 
-	public void moveCamera(KeyEvent ke)
-	{
-				int kc = ke.getKeyCode();
+	@Override
+	public void keyPressed(KeyEvent key)
+    {
+    	try
+    	{
+        	char i = key.getKeyChar();
+			keys[(int)i] = true;
+    	}
+    	catch(Exception e){};
 
-       if(kc == KeyEvent.VK_UP)                         // Move forwards
-       {
+
+    }
+
+
+	@Override
+	public void keyTyped(KeyEvent arg0)
+	{
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+    public void keyReleased(KeyEvent key)
+    {
+    	try
+    	{
+        	char i = key.getKeyChar();
+        	keys[(int)i] = false;
+    	}
+    	catch(Exception e){};
+    }
+
+	public void keyboardChecks()
+    {
+        if(keys['w'])
+        {
+            cameraZPosition -= 0.1;
+            cameraLZPosition -= 0.1;
+
             camera.moveForward(0.1);
             camera.look(10);
-       }
 
-       if(kc == KeyEvent.VK_DOWN)                         // Move backwards
-       {
+        }
+
+        if(keys['s'])
+        {
+            cameraZPosition += 0.1;
+            cameraLZPosition += 0.1;
+
             camera.moveForward(-0.1);
             camera.look(10);
-       }
+        }
 
-       if(kc == KeyEvent.VK_LEFT)                         // Turn left
-       {
+        if(keys['j'])
+        {
+            camera.pitchUp(0.05);
+            camera.look(10);
+        }
+
+        if(keys['k'])
+        {
+            camera.pitchDown(0.05);
+            camera.look(10);
+        }
+
+        if(keys['q'])
+        {
             camera.yawLeft(0.01);
             camera.look(10);
-       }
+        }
 
-       if(kc == KeyEvent.VK_RIGHT)                         // Turn right
-       {
+        if(keys['e'])
+        {
             camera.yawRight(0.01);
             camera.look(10);
-       }
+        }
+
+        if(keys['a'])
+        {
+            camera.strafeLeft(0.1);
+            camera.look(10);
+
+			System.out.print("moving left");
+        }
+
+        if(keys['d'])
+        {
+            camera.strafeRight(0.1);
+            camera.look(10);
+        }
 	}
 }
 

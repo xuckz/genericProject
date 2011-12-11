@@ -9,8 +9,6 @@ import javax.swing.*;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import java.awt.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -43,16 +41,8 @@ public class Frame extends JFrame
         animator.add(canvas);
 
         // This is a workaround for the GLCanvas not adjusting its size, when the frame is resized.
-        canvas.setMinimumSize(new Dimension());    
-        
-        canvas.addKeyListener(new KeyAdapter() 
-        {
-        	public void keyPressed(KeyEvent ke) 
-        	{  
-				gfx.moveCamera(ke);
-        	}
-        });
-		
+        canvas.setMinimumSize(new Dimension());
+	 	canvas.addKeyListener(gfx);
         
         this.addWindowListener(new WindowAdapter() {
 
