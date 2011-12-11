@@ -1,8 +1,7 @@
 package de.genericproject.game;
 
-import java.util.Vector;
-
 import javax.media.opengl.GLAutoDrawable;
+import java.util.Vector;
 
 public class BoundingBox {
 
@@ -65,9 +64,11 @@ public class BoundingBox {
 	/**
 	 * render everything inside this bounding box
 	 */
-	public void render(GLAutoDrawable drawable)
+	public void render(GLAutoDrawable drawable,float x, float y, float z)
 	{
 		for(int i=0; i<blocks.size(); i++)
+		{
 			blocks.get(i).render(drawable);
+		}
 	}
 }

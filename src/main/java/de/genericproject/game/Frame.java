@@ -1,22 +1,18 @@
 package de.genericproject.game;
 
-import java.awt.Dimension;
+import com.jogamp.opengl.util.FPSAnimator;
+
+import javax.media.opengl.GLCapabilities;
+import javax.media.opengl.GLProfile;
+import javax.media.opengl.awt.GLCanvas;
+import javax.swing.*;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.LayoutStyle.ComponentPlacement;
+import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import javax.media.opengl.GLCapabilities;
-import javax.media.opengl.GLProfile;
-import javax.media.opengl.awt.GLCanvas;
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPopupMenu;
-import javax.swing.LayoutStyle.ComponentPlacement;
-import javax.swing.WindowConstants;
-
-import com.jogamp.opengl.util.FPSAnimator;
 
 public class Frame extends JFrame 
 {
@@ -53,22 +49,7 @@ public class Frame extends JFrame
         {
         	public void keyPressed(KeyEvent ke) 
         	{  
-                int kc = ke.getKeyCode();
-                if (kc == KeyEvent.VK_DOWN) {     
-                        // back
-                        gfx.moveCamera(0.5f);
-                } else if (kc == KeyEvent.VK_LEFT) {
-                        // turn left
-                		gfx.rotateCamera(2f);
-                        
-                } else if (kc == KeyEvent.VK_UP) {
-                		// forth
-                        gfx.moveCamera(-0.5f);
-
-                } else if (kc == KeyEvent.VK_RIGHT) {
-                        // turn right
-                	gfx.rotateCamera(-2f);
-                }
+				gfx.moveCamera(ke);
         	}
         });
 		

@@ -2,19 +2,17 @@ package de.genericproject.game;
 
 import javax.media.opengl.*;
 import javax.media.opengl.glu.*;
+import java.awt.event.KeyEvent;
 
 public class Graphics implements GLEventListener
 {
     private GLU glu;
     private int w, h;
-    private float angle = 0.0f;
-    
-    private float cam_position_x;
-    private float cam_position_y;
-    private float cam_position_z;
-    
+
     private BlockWorld blockworld;
     private LightSource light1;
+
+	Camera camera;
       
     public Graphics()
     {  
@@ -22,6 +20,12 @@ public class Graphics implements GLEventListener
     	light1 = new LightSource(GL2.GL_LIGHT1, 3.4f, 14f, 2.2f, 1f);
     	light1.setColorAmbient(0.2f, 0.15f, 0.15f, 0.3f);
     	light1.setColorSpecular(0.8f, 0.8f, 0.8f, 0.8f);
+
+		camera = new Camera();
+        camera.yawLeft(0);
+        camera.pitchDown(0.0);
+        camera.moveForward(-10);
+        camera.look(10);
     }
     
     /**
@@ -42,28 +46,9 @@ public class Graphics implements GLEventListener
     	gl.glDepthFunc(GL2.GL_LESS);										// The Type Of Depth Test To Do
     	gl.glShadeModel(GL2.GL_SMOOTH);
     	gl.glHint(GL2.GL_PERSPECTIVE_CORRECTION_HINT, GL2.GL_NICEST);			// Really Nice Perspective Calculations
-    	
-    	cam_position_x = 0f;
-    	cam_position_y = 3f;
-    	cam_position_z = 18f;
-    }
-    
-    /**
-     * move the camera along the z-axis
-     * @param distance 
-     */
-    public void moveCamera(float distance)
-    {
-    	cam_position_z += distance;
-    }
-    
-    /** 
-     * rotate the camera around the y-axis
-     * @param angle
-     */
-    public void rotateCamera(float angle)
-    {
-    	this.angle += angle;
+
+
+		        gl.glViewport(0, 0, w, h);											// Reset The Current Viewport
     }
 
     /**
@@ -77,21 +62,19 @@ public class Graphics implements GLEventListener
         h = drawable.getHeight();
         
         gl.glClear(GL2.GL_COLOR_BUFFER_BIT|GL2.GL_DEPTH_BUFFER_BIT);			// Clear the colour and depth buffer
-          
-        gl.glViewport(0, 0, w, h);											// Reset The Current Viewport
         
         gl.glEnable(GL2.GL_LIGHTING);
         light1.render(gl);
         
         gl.glCullFace(GL2.GL_BACK);
         
-        gl.glMatrixMode(GL2.GL_PROJECTION);									// Select The Projection Matrix
-        gl.glLoadIdentity();												// Reset The Projection Matrix
-    	
-        glu.gluPerspective(45.0f,(float)w/(float)h,0.1f,100.0f);			// Calculate The Aspect Ratio Of The Window
+        gl.glMatrixMode(GL2.GL_PROJECTION);					// Select The Projection Matrix
+        gl.glLoadIdentity();							// Reset The Projection Matrix
 
-        gl.glMatrixMode(GL2.GL_MODELVIEW);									// Select The Modelview Matrix
-        gl.glLoadIdentity();												// Reset The Modelview Matrix     
+        glu.gluPerspective(70.0, (float)w/(float)h, 1, 50);
+        glu.gluLookAt(camera.getXPos(), camera.getYPos(), camera.getZPos(), camera.getXLPos(), camera.getYLPos(), camera.getZLPos(), 0.0, 1.0, 0.0);
+        gl.glMatrixMode(GL2.GL_MODELVIEW);					// Select The Modelview Matrix
+        gl.glLoadIdentity();
 
         drawScene(drawable);												// Draw the scene
     }
@@ -102,13 +85,13 @@ public class Graphics implements GLEventListener
 	public void reshape(GLAutoDrawable drawable, int x, int y, int w2, int h2) 
     {
 		GL2 gl = drawable.getGL().getGL2();
-        
+
         w2 = drawable.getWidth();
         h2 = drawable.getHeight();
-        
+
         gl.glMatrixMode(GL2.GL_MODELVIEW);
         gl.glLoadIdentity();
-        
+
         // perspective view
         gl.glViewport(10, 10, w-20, h-20);
         gl.glMatrixMode(GL2.GL_PROJECTION);
@@ -127,12 +110,9 @@ public class Graphics implements GLEventListener
     public void drawScene(GLAutoDrawable drawable)
     {
     	GL2 gl = drawable.getGL().getGL2();
-    	
+
     	gl.glMatrixMode(GL2.GL_MODELVIEW);
         gl.glLoadIdentity();
-        
-        gl.glTranslatef( -cam_position_x, -cam_position_y, -cam_position_z );									// Move back 6 units
-    	gl.glRotatef(angle, 0.0f, 1.0f, 0.0f);								// Rotate by angle
 
     	drawGraph(drawable);
     }
@@ -143,13 +123,42 @@ public class Graphics implements GLEventListener
      */
     private void drawGraph(GLAutoDrawable drawable)
     {
-    	blockworld.render(drawable, cam_position_x, cam_position_y, cam_position_z, angle);
+    	blockworld.render(drawable, (float)camera.getXPos(), (float)camera.getYPos(), (float)camera.getZPos(), (float)camera.getPitch());
     }
     
 	@Override
 	public void dispose(GLAutoDrawable arg0) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	public void moveCamera(KeyEvent ke)
+	{
+				int kc = ke.getKeyCode();
+
+       if(kc == KeyEvent.VK_UP)                         // Move forwards
+       {
+            camera.moveForward(0.1);
+            camera.look(10);
+       }
+
+       if(kc == KeyEvent.VK_DOWN)                         // Move backwards
+       {
+            camera.moveForward(-0.1);
+            camera.look(10);
+       }
+
+       if(kc == KeyEvent.VK_LEFT)                         // Turn left
+       {
+            camera.yawLeft(0.01);
+            camera.look(10);
+       }
+
+       if(kc == KeyEvent.VK_RIGHT)                         // Turn right
+       {
+            camera.yawRight(0.01);
+            camera.look(10);
+       }
 	}
 }
 

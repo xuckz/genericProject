@@ -1,8 +1,7 @@
 package de.genericproject.game;
 
-import java.util.Vector;
-
 import javax.media.opengl.GLAutoDrawable;
+import java.util.Vector;
 
 public class BlockWorld {
 
@@ -130,7 +129,7 @@ public class BlockWorld {
 		for(int i=0; i<boundingBoxes.size(); i++)
 		{
 			if(boundingBoxes.get(i).isVisible(x, y, z, angle) )
-				boundingBoxes.get(i).render(drawable);
+				boundingBoxes.get(i).render(drawable, x, y, z);
 		}
 		if(framecounter > 40)
 		{
