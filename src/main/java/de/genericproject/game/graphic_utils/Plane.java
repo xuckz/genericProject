@@ -13,4 +13,10 @@ public class Plane {
 		base = point;
 		this.normal = normal;
 	}
+	
+	public float distanceTo(Vector3f point)
+	{
+		Vector3f v = new Vector3f(point.x - base.x, point.y - base.y, point.z - base.z);
+		return normal.dotProduct(v);
+	}
 }

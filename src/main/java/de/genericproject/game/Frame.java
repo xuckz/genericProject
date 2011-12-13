@@ -56,18 +56,22 @@ public class Frame extends JFrame
                 int kc = ke.getKeyCode();
                 if (kc == KeyEvent.VK_DOWN) {     
                         // back
-                        gfx.moveCamera(0.5f);
+                        gfx.camera.moveForward(-0.5f);
+                        gfx.camera.look(10);
                 } else if (kc == KeyEvent.VK_LEFT) {
                         // turn left
-                		gfx.rotateCamera(2f);
+                		gfx.camera.strafeLeft(2f);
+                		gfx.camera.look(10);
                         
                 } else if (kc == KeyEvent.VK_UP) {
                 		// forth
-                        gfx.moveCamera(-0.5f);
+                        gfx.camera.moveForward(0.5f);
+                        gfx.camera.look(10);
 
                 } else if (kc == KeyEvent.VK_RIGHT) {
                         // turn right
-                	gfx.rotateCamera(-2f);
+                	gfx.camera.strafeRight(2f);
+                	gfx.camera.look(10);
                 }
         	}
         });

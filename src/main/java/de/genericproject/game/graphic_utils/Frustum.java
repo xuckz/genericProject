@@ -34,4 +34,13 @@ public class Frustum {
 	{
 		back = new Plane(vBase.add(vDirection.multiply(dist_far)), vDirection);
 	}
+	
+	public boolean isPointInside(Vector3f point)
+	{
+		if(front.distanceTo(point) > 0)
+			if(back.distanceTo(point) > 0)
+				return true;
+		return false;
+	}
+	
 }

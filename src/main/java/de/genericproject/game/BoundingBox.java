@@ -4,6 +4,8 @@ import java.util.Vector;
 
 import javax.media.opengl.GLAutoDrawable;
 
+import de.genericproject.game.graphic_utils.Vector3f;
+
 public class BoundingBox {
 
 	int size;
@@ -37,6 +39,11 @@ public class BoundingBox {
 		return (withinRangeX(x) && withinRangeY(y) && withinRangeZ(z));
 	}
 	
+	public boolean containsPoint(float x, float y, float z)
+	{
+		return containsBlock((int)x, (int)y, (int)z);
+	}
+	
 	private boolean withinRangeX(int x)
 	{
 		return (x >= lower_x && x <= lower_x+size);
@@ -55,11 +62,6 @@ public class BoundingBox {
 	public void clearAll()
 	{
 		blocks.removeAllElements();
-	}
-	
-	public boolean isVisible(float x, float y, float z, float angle)
-	{
-		return true;
 	}
 	
 	/**

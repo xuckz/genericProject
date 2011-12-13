@@ -4,15 +4,15 @@ import java.util.Vector;
 
 import javax.media.opengl.GLAutoDrawable;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
 
 import de.genericproject.game.fileimport.ModelReader;
 import de.genericproject.game.fileimport.VoxelData;
 import de.genericproject.game.fileimport.binvox.BinvoxReader;
 
 public class BlockWorld {
-	final static Logger log = LoggerFactory.getLogger(BlockWorld.class);
+	//final static Logger log = LoggerFactory.getLogger(BlockWorld.class);
 
 	Vector<Block> blocks;
 	Vector<BoundingBox> boundingBoxes;
@@ -36,6 +36,7 @@ public class BlockWorld {
 		if(v != null) {
 			addModel(v, -30, -50, 2);
 		}
+		System.out.println("model loaded. containing "+blocks.size()+" blocks");
 		
 		for(int x = -99; x < 100; x++)
 		{
@@ -161,8 +162,8 @@ public class BlockWorld {
 		}
 		for(int i=0; i<boundingBoxes.size(); i++)
 		{
-			if(boundingBoxes.get(i).isVisible(x, y, z, angle) )
-				boundingBoxes.get(i).render(drawable);
+			// TODO: for each bounding box check if it's inside the camera frustum
+			boundingBoxes.get(i).render(drawable);
 		}
 		if(framecounter > 40)
 		{
