@@ -125,7 +125,7 @@ public class Graphics implements GLEventListener
      */
     private void drawGraph(GLAutoDrawable drawable)
     {
-    	blockworld.render(drawable, (float)camera.getXPos(), (float)camera.getYPos(), (float)camera.getZPos(), (float)camera.getPitch());
+    	blockworld.render(drawable, camera);
     }
     
 	

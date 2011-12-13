@@ -153,7 +153,7 @@ public class BlockWorld {
 	 * render method. render this block world
 	 * @param drawable
 	 */
-	public void render(GLAutoDrawable drawable, float x, float y, float z, float angle)
+	public void render(GLAutoDrawable drawable, Camera camera)
 	{	
 		framecounter++;
 		if(framecounter > 40)
@@ -163,7 +163,8 @@ public class BlockWorld {
 		for(int i=0; i<boundingBoxes.size(); i++)
 		{
 			// TODO: for each bounding box check if it's inside the camera frustum
-			boundingBoxes.get(i).render(drawable);
+			if(camera.isBoundingBoxVisible( boundingBoxes.get(i) ) )
+				boundingBoxes.get(i).render(drawable);
 		}
 		if(framecounter > 40)
 		{

@@ -1,5 +1,8 @@
 package de.genericproject.game;
 
+import de.genericproject.game.graphic_utils.Frustum;
+import de.genericproject.game.graphic_utils.Vector3f;
+
 public class Camera
 {
     private double xPos;
@@ -12,6 +15,8 @@ public class Camera
 
     private double pitch;
     private double yaw;
+    
+    private Frustum frustum;
 
     public Camera()
     {
@@ -22,6 +27,8 @@ public class Camera
         xLPos = 0;
         yLPos = 0;
         zLPos = 10;
+        
+        frustum = new Frustum(new Vector3f(xPos, yPos, zPos), new Vector3f(xLPos - xPos, yLPos - yPos, zLPos - zPos), 1f, 100f);
     }
 
     public Camera(double xPos, double yPos, double zPos, double xLPos, double yLPos, double zLPos)
@@ -33,6 +40,8 @@ public class Camera
         this.xLPos = xLPos;
         this.yLPos = yLPos;
         this.zLPos = zLPos;
+        
+        frustum = new Frustum(new Vector3f(xPos, yPos, zPos), new Vector3f(xLPos - xPos, yLPos - yPos, zLPos - zPos), 1f, 100f);
     }
 
     public void setPitch(double pitch)
@@ -118,6 +127,7 @@ public class Camera
         moveForward(-10);
 
         lookPosition(xLook, yLook, zLook);
+        frustum.updatePosition(new Vector3f(xPos, yPos, zPos), new Vector3f(xLPos-xPos, yLPos-yPos, zLPos-zPos));
     }
 
     public double getXPos()
@@ -178,5 +188,15 @@ public class Camera
     public void yawLeft(double amount)
     {
         this.yaw -= amount;
+    }
+    
+    public boolean isPointVisible(Vector3f point)
+    {
+    	return frustum.isPointInside(point);
+    }
+    
+    public boolean isBoundingBoxVisible(BoundingBox box)
+    {
+    	return frustum.isPointInside(box.getBottomLeftPoint()) || frustum.isPointInside(box.getTopRightPoint());
     }
 }

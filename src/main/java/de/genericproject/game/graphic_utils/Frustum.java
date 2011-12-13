@@ -12,10 +12,19 @@ public class Frustum {
 	
 	public Frustum (Vector3f base, Vector3f direction, float dist_near, float dist_far)
 	{
-		vBase = base;
-		vDirection = direction;
+		vBase = new Vector3f(base);
+		vDirection = new Vector3f(direction);
+		vDirection.normalize();
 		this.dist_near = dist_near;
 		this.dist_far = dist_far;
+		updatePlanes();
+	}
+	
+	public void updatePosition(Vector3f base, Vector3f direction)
+	{
+		vBase = new Vector3f(base);
+		vDirection = new Vector3f(direction);
+		vDirection.normalize();
 		updatePlanes();
 	}
 	
@@ -32,7 +41,7 @@ public class Frustum {
 	
 	private void updateBackPlane()
 	{
-		back = new Plane(vBase.add(vDirection.multiply(dist_far)), vDirection);
+		back = new Plane(vBase.add(vDirection.multiply(dist_far)), vDirection.multiply(-1));
 	}
 	
 	public boolean isPointInside(Vector3f point)
