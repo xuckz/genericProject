@@ -12,7 +12,12 @@ public class Graphics implements GLEventListener, KeyListener
 {
     private GLU glu;
     private int w, h;
-
+    private float angle = 0.0f;
+    
+    private float cam_position_x;
+    private float cam_position_y;
+    private float cam_position_z;
+    
     private BlockWorld blockworld;
     private LightSource light1;
 
@@ -76,27 +81,29 @@ public class Graphics implements GLEventListener, KeyListener
      */
     public void display(GLAutoDrawable drawable) 
     {
+		keyboardChecks();
+
         GL2 gl = drawable.getGL().getGL2();
         
         w = drawable.getWidth();
         h = drawable.getHeight();
-
-	   	keyboardChecks();
         
         gl.glClear(GL2.GL_COLOR_BUFFER_BIT|GL2.GL_DEPTH_BUFFER_BIT);			// Clear the colour and depth buffer
+          
+        gl.glViewport(0, 0, w, h);											// Reset The Current Viewport
         
         gl.glEnable(GL2.GL_LIGHTING);
         light1.render(gl);
         
         gl.glCullFace(GL2.GL_BACK);
-
-        gl.glMatrixMode(GL2.GL_PROJECTION);					// Select The Projection Matrix
-        gl.glLoadIdentity();							// Reset The Projection Matrix
-
-        glu.gluPerspective(70.0, (float)w/(float)h, 1, 50);
+        
+        gl.glMatrixMode(GL2.GL_PROJECTION);									// Select The Projection Matrix
+        gl.glLoadIdentity();												// Reset The Projection Matrix
+    	
+        glu.gluPerspective(45.0f,(float)w/(float)h,0.1f,100.0f);			// Calculate The Aspect Ratio Of The Window
         glu.gluLookAt(camera.getXPos(), camera.getYPos(), camera.getZPos(), camera.getXLPos(), camera.getYLPos(), camera.getZLPos(), 0.0, 1.0, 0.0);
-        gl.glMatrixMode(GL2.GL_MODELVIEW);					// Select The Modelview Matrix
-        gl.glLoadIdentity();
+        gl.glMatrixMode(GL2.GL_MODELVIEW);									// Select The Modelview Matrix
+        gl.glLoadIdentity();												// Reset The Modelview Matrix     
 
         drawScene(drawable);												// Draw the scene
     }
@@ -107,13 +114,13 @@ public class Graphics implements GLEventListener, KeyListener
 	public void reshape(GLAutoDrawable drawable, int x, int y, int w2, int h2) 
     {
 		GL2 gl = drawable.getGL().getGL2();
-
+        
         w2 = drawable.getWidth();
         h2 = drawable.getHeight();
-
+        
         gl.glMatrixMode(GL2.GL_MODELVIEW);
         gl.glLoadIdentity();
-
+        
         // perspective view
         gl.glViewport(10, 10, w-20, h-20);
         gl.glMatrixMode(GL2.GL_PROJECTION);
@@ -132,7 +139,7 @@ public class Graphics implements GLEventListener, KeyListener
     public void drawScene(GLAutoDrawable drawable)
     {
     	GL2 gl = drawable.getGL().getGL2();
-
+    	
     	gl.glMatrixMode(GL2.GL_MODELVIEW);
         gl.glLoadIdentity();
 
@@ -145,7 +152,7 @@ public class Graphics implements GLEventListener, KeyListener
      */
     private void drawGraph(GLAutoDrawable drawable)
     {
-    	blockworld.render(drawable, (float)camera.getXPos(), (float)camera.getYPos(), (float)camera.getZPos(), (float)camera.getPitch(), rendermode);
+    	blockworld.render(drawable, camera, rendermode);
     }
     
 	@Override
@@ -245,15 +252,15 @@ public class Graphics implements GLEventListener, KeyListener
 
 		if(keys['r'])
         {
-			if(rendermode == 0)
+			if(rendermode == 1)
 			{
-				rendermode = 1;
+				rendermode = 0;
 				System.out.print("changed rendermode to vertex array \n");
 			}
 
-			else if(rendermode == 1)
+			else if(rendermode == 0)
 			{
-				rendermode = 0;
+				rendermode = 1;
 				System.out.print("changed rendermode to vertex3f \n");
 			}
         }

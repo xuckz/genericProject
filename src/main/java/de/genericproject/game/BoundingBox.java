@@ -1,22 +1,22 @@
 package de.genericproject.game;
 
+import de.genericproject.game.graphic_utils.Vector3f;
+
 import javax.media.opengl.GLAutoDrawable;
 import java.util.Vector;
 
 public class BoundingBox {
 
 	int size;
-	int lower_x;
-	int lower_y;
-	int lower_z;
+	Vector3f bottomLeftPoint;
+	Vector3f topRightPoint;
 	
 	Vector<Block> blocks;
 	
 	public BoundingBox(int x, int y, int z, int size)
 	{
-		lower_x = x;
-		lower_y = y;
-		lower_z = z;
+		bottomLeftPoint = new Vector3f(x, y, z);
+		topRightPoint = new Vector3f(x+size, y+size, z+size);
 		this.size = size;
 		blocks = new Vector<Block>();
 	}
@@ -36,19 +36,24 @@ public class BoundingBox {
 		return (withinRangeX(x) && withinRangeY(y) && withinRangeZ(z));
 	}
 	
+	public boolean containsPoint(float x, float y, float z)
+	{
+		return containsBlock((int)x, (int)y, (int)z);
+	}
+	
 	private boolean withinRangeX(int x)
 	{
-		return (x >= lower_x && x <= lower_x+size);
+		return (x >= bottomLeftPoint.getX() && x <= topRightPoint.getX());
 	}
 	
 	private boolean withinRangeY(int y)
 	{
-		return (y >= lower_y && y <= lower_y+size);
+		return (y >= bottomLeftPoint.getY() && y <= topRightPoint.getY());
 	}
 	
 	private boolean withinRangeZ(int z)
 	{
-		return (z >= lower_z && z <= lower_z+size);
+		return (z >= bottomLeftPoint.getZ() && z <= topRightPoint.getZ());
 	}
 	
 	public void clearAll()
@@ -56,15 +61,10 @@ public class BoundingBox {
 		blocks.removeAllElements();
 	}
 	
-	public boolean isVisible(float x, float y, float z, float angle)
-	{
-		return true;
-	}
-	
 	/**
 	 * render everything inside this bounding box
 	 */
-	public void render(GLAutoDrawable drawable,float x, float y, float z, int rendermode)
+	public void render(GLAutoDrawable drawable, int rendermode)
 	{
 		for(int i=0; i<blocks.size(); i++)
 		{
@@ -74,5 +74,15 @@ public class BoundingBox {
 			else if(rendermode == 1)
 				blocks.get(i).renderVertex3f(drawable);
 		}
+	}
+	
+	public Vector3f getBottomLeftPoint()
+	{
+		return bottomLeftPoint;
+	}
+	
+	public Vector3f getTopRightPoint()
+	{
+		return topRightPoint;
 	}
 }
