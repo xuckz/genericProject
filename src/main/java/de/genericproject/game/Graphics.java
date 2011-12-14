@@ -67,8 +67,6 @@ public class Graphics implements GLEventListener, KeyListener
 
 
 		gl.glViewport(0, 0, w, h);											// Reset The Current Viewport
-		gl.glCullFace(GL2.GL_FRONT);
-		gl.glEnable(GL2.GL_CULL_FACE);
 	}
 
     /**
@@ -88,6 +86,8 @@ public class Graphics implements GLEventListener, KeyListener
         gl.glEnable(GL2.GL_LIGHTING);
         light1.render(gl);
         
+        gl.glCullFace(GL2.GL_BACK);
+
         gl.glMatrixMode(GL2.GL_PROJECTION);					// Select The Projection Matrix
         gl.glLoadIdentity();							// Reset The Projection Matrix
 
