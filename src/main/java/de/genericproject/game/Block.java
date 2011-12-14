@@ -42,23 +42,7 @@ public class Block {
 
 	// vertex coords array
 	float vertices[];
-
-	int indices[] = {	0,1,2,3,
-                     	4,5,6,7,
-                     	8,9,10,11,
-                     	12,13,14,15,
-						16,17,18,19,
-                     	20,21,22,23
-					};
-
-			// the colors that match with each vertex
-	float[] colors = new float[]
-					{1,1,1,  1,1,0,  1,0,0,  1,0,1,              // h-e-a-d
-                    1,1,1,  1,0,1,  0,0,1,  0,1,1,              // h-d-c-g
-                    1,1,1,  0,1,1,  0,1,0,  1,1,0,            // h-g-f-e
-                    1,1,0,  0,1,0,  0,0,0,  1,0,0,              // e-f-b-a
-                    0,0,0,  0,0,1,  1,0,1,  1,0,0,               // b-c-d-a
-                    0,0,1,  0,0,0,  0,1,0,  0,1,1};            // c-b-f-g
+	int indices[];
 
 	private FloatBuffer vertexBuffer;
 	private FloatBuffer colorBuffer;
@@ -72,6 +56,15 @@ public class Block {
 	final static float[] COLOR_LEAF = {0.53f, 0.91f, 0.28f, 1f};
 	final static float[] COLOR_GRASS = {0.43f, 0.81f, 0.28f, 1f};
 	final static float[] COLOR_WATER = {0.13f, 0.34f, 0.84f, 0.7f};
+
+	final static float[] BOX_POINT_A = {0f, 0f, 0f};
+	final static float[] BOX_POINT_B = {0f, 0f, BOX_SIZE};
+	final static float[] BOX_POINT_C = {BOX_SIZE, 0f, BOX_SIZE};
+	final static float[] BOX_POINT_D = {BOX_SIZE, 0f, 0f};
+	final static float[] BOX_POINT_E = {0f, BOX_SIZE, 0f};
+	final static float[] BOX_POINT_F = {0f, BOX_SIZE, BOX_SIZE};
+	final static float[] BOX_POINT_G = {BOX_SIZE, BOX_SIZE, BOX_SIZE};
+	final static float[] BOX_POINT_H = {BOX_SIZE, BOX_SIZE, 0f};
 
 	final static float[][] COLOR_MAP = {COLOR_DIRT, COLOR_ROCK, COLOR_SAND, COLOR_WOOD, COLOR_LEAF, COLOR_GRASS, COLOR_WATER};
 	/**
@@ -87,62 +80,19 @@ public class Block {
 	 */
 	public Block(float x, float y, float z, int type)
 	{
-		x = x/2;
-		y = y/2;
-		z = z/2;
-
-		vertices = new float[]
-		{
-			BOX_SIZE + x, 	BOX_SIZE + y , 	0f + z , 			0f + x , 		BOX_SIZE + y, 	0f + z,  			0f + x, 		0f + y, 		0f + z,  		BOX_SIZE + x, 	0f + y, 		0f + z,        	// h-e-a-d
-			BOX_SIZE + x, 	BOX_SIZE + y , 	0f + z, 			BOX_SIZE + x , 	0f + y, 		0f + z, 			BOX_SIZE + x, 	0f + y, 		BOX_SIZE + z, 	BOX_SIZE + x, 	BOX_SIZE + y, 	BOX_SIZE + z, 	// h-d-c-g
-			BOX_SIZE + x,	BOX_SIZE + y , 	0f + z, 			BOX_SIZE + x , 	BOX_SIZE + y, 	BOX_SIZE + z,  		0f + x, 		BOX_SIZE + y, 	BOX_SIZE + z,  	0f + x, 		BOX_SIZE + y, 	0f + z,        	// h-g-f-e
-			0f + x, 		BOX_SIZE + y , 	0f + z,  			0f + x , 		BOX_SIZE + y, 	BOX_SIZE + z,  		0f + x, 		0f + y, 		BOX_SIZE + z,  	0f + x, 		0f + y, 		0f + z,    		// e-f-b-a
-			0f + x, 		0f + y, 		BOX_SIZE + z ,  	BOX_SIZE + x , 	0f + y, 		BOX_SIZE + z,  		BOX_SIZE + x, 	0f + y, 		0f + z,  		0f + x, 		0f + y, 		0f + z,    		// b-c-d-a
-			BOX_SIZE + x, 	0f + y , 		BOX_SIZE + z ,  	0f + x , 		0f + y, 		BOX_SIZE + z,  		0f + x , 		BOX_SIZE + y, 	BOX_SIZE + z,  	BOX_SIZE + x, 	BOX_SIZE + y, 	BOX_SIZE + z  	// c-b-f-g
-		};
+		setUpVertexArrays(x,y,z);
 
 		pos_x = x;
 		pos_y = y;
 		pos_z = z;
 		this.type = type;
-
-		vertexBuffer =
-			ByteBuffer
-				.allocateDirect(vertices.length * 4)
-				.order(ByteOrder.nativeOrder())
-				.asFloatBuffer();
-		vertexBuffer.put(vertices);
-		vertexBuffer.rewind();
-
-		colorBuffer =
-			ByteBuffer
-				.allocateDirect(colors.length * 4)
-				.order(ByteOrder.nativeOrder())
-				.asFloatBuffer();
-		colorBuffer.put(colors);
-		colorBuffer.rewind();
-
-		indicesBuffer =
-			(ByteBuffer.allocateDirect(indices.length * 4))
-				.order(ByteOrder.nativeOrder())
-				.asIntBuffer();
-		indicesBuffer.put(indices);
-		indicesBuffer.rewind();
-
-		normalsBuffer =
-			ByteBuffer
-				.allocateDirect(vertices.length * 4)
-				.order(ByteOrder.nativeOrder())
-				.asFloatBuffer();
-		normalsBuffer.put(vertices);
-		normalsBuffer.rewind();
 	}
 
 	/**
 	 * render method. render this single block
 	 * @param drawable
 	 */
-	public void render(GLAutoDrawable drawable)
+	public void renderVertexArray(GLAutoDrawable drawable)
 	{
 		GL2 gl = drawable.getGL().getGL2();
 
@@ -163,9 +113,12 @@ public class Block {
 		gl.glDisableClientState(GL2.GL_VERTEX_ARRAY);
 		gl.glDisableClientState(GL2.GL_INDEX_ARRAY);
 		//gl.glDisableClientState(GL2.GL_COLOR_ARRAY);
+	}
 
-/*		debug_counter++;
-		GL2 gl = drawable.getGL().getGL2();;
+	public void renderVertex3f(GLAutoDrawable drawable)
+	{
+		debug_counter++;
+		GL2 gl = drawable.getGL().getGL2();
 
     	gl.glPushMatrix();
     	gl.glTranslatef(pos_x * BOX_SIZE, pos_y * BOX_SIZE, pos_z * BOX_SIZE);
@@ -176,8 +129,6 @@ public class Block {
     	gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_AMBIENT, COLOR_MAP[type], 0);
     	gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_SPECULAR, COLOR_MAP[type], 0);
     	gl.glMaterialf(GL2.GL_FRONT, GL2.GL_SHININESS, 0.2f);
-
-		float[] vertexArray = {BOX_POINT_A, BOX_POINT_B};
 
     	// bottom ABCD
     	gl.glNormal3f(0f, -1f, 0f);
@@ -192,6 +143,86 @@ public class Block {
 		gl.glVertex3fv(BOX_POINT_D, 0);
 		gl.glVertex3fv(BOX_POINT_H, 0);
 		gl.glVertex3fv(BOX_POINT_E, 0);
-*/
+
+		// left AEFB
+		gl.glNormal3f(-1f, 0f, 0f);
+		gl.glVertex3fv(BOX_POINT_A, 0);
+		gl.glVertex3fv(BOX_POINT_E, 0);
+		gl.glVertex3fv(BOX_POINT_F, 0);
+		gl.glVertex3fv(BOX_POINT_B, 0);
+
+		// back BFGC
+		gl.glNormal3f(0f, 0f, 1f);
+		gl.glVertex3fv(BOX_POINT_B, 0);
+		gl.glVertex3fv(BOX_POINT_F, 0);
+		gl.glVertex3fv(BOX_POINT_G, 0);
+		gl.glVertex3fv(BOX_POINT_C, 0);
+
+		// right DCGH
+		gl.glNormal3f(1f, 0f, 0f);
+		gl.glVertex3fv(BOX_POINT_D, 0);
+		gl.glVertex3fv(BOX_POINT_C, 0);
+		gl.glVertex3fv(BOX_POINT_G, 0);
+		gl.glVertex3fv(BOX_POINT_H, 0);
+
+		// top EHGF
+		gl.glNormal3f(0f, 1f, 0f);
+		gl.glVertex3fv(BOX_POINT_E, 0);
+		gl.glVertex3fv(BOX_POINT_H, 0);
+		gl.glVertex3fv(BOX_POINT_G, 0);
+		gl.glVertex3fv(BOX_POINT_F, 0);
+
+		gl.glEnd();														// Finish drawing square bottom
+		gl.glPopMatrix();
+	}
+
+	private void setUpVertexArrays(float x, float y, float z)
+	{
+		x = x/2;
+		y = y/2;
+		z = z/2;
+
+		indices = new int[]
+		{
+			0,1,2,3,
+			4,5,6,7,
+			8,9,10,11,
+			12,13,14,15,
+			16,17,18,19,
+			20,21,22,23
+		};
+
+		vertices = new float[]
+		{
+			BOX_SIZE + x, 	BOX_SIZE + y , 	0f + z , 			0f + x , 		BOX_SIZE + y, 	0f + z,  			0f + x, 		0f + y, 		0f + z,  		BOX_SIZE + x, 	0f + y, 		0f + z,        	// h-e-a-d
+			BOX_SIZE + x, 	BOX_SIZE + y , 	0f + z, 			BOX_SIZE + x , 	0f + y, 		0f + z, 			BOX_SIZE + x, 	0f + y, 		BOX_SIZE + z, 	BOX_SIZE + x, 	BOX_SIZE + y, 	BOX_SIZE + z, 	// h-d-c-g
+			BOX_SIZE + x,	BOX_SIZE + y , 	0f + z, 			BOX_SIZE + x , 	BOX_SIZE + y, 	BOX_SIZE + z,  		0f + x, 		BOX_SIZE + y, 	BOX_SIZE + z,  	0f + x, 		BOX_SIZE + y, 	0f + z,        	// h-g-f-e
+			0f + x, 		BOX_SIZE + y , 	0f + z,  			0f + x , 		BOX_SIZE + y, 	BOX_SIZE + z,  		0f + x, 		0f + y, 		BOX_SIZE + z,  	0f + x, 		0f + y, 		0f + z,    		// e-f-b-a
+			0f + x, 		0f + y, 		BOX_SIZE + z ,  	BOX_SIZE + x , 	0f + y, 		BOX_SIZE + z,  		BOX_SIZE + x, 	0f + y, 		0f + z,  		0f + x, 		0f + y, 		0f + z,    		// b-c-d-a
+			BOX_SIZE + x, 	0f + y , 		BOX_SIZE + z ,  	0f + x , 		0f + y, 		BOX_SIZE + z,  		0f + x , 		BOX_SIZE + y, 	BOX_SIZE + z,  	BOX_SIZE + x, 	BOX_SIZE + y, 	BOX_SIZE + z  	// c-b-f-g
+		};
+
+		vertexBuffer =
+			ByteBuffer
+				.allocateDirect(vertices.length * 4)
+				.order(ByteOrder.nativeOrder())
+				.asFloatBuffer();
+		vertexBuffer.put(vertices);
+		vertexBuffer.rewind();
+
+		indicesBuffer =
+			(ByteBuffer.allocateDirect(indices.length * 4))
+				.order(ByteOrder.nativeOrder())
+				.asIntBuffer();
+		indicesBuffer.put(indices);
+		indicesBuffer.rewind();
+
+		normalsBuffer =
+			ByteBuffer
+				.allocateDirect(vertices.length * 4)
+				.order(ByteOrder.nativeOrder())
+				.asFloatBuffer();
+		normalsBuffer.put(vertices);
+		normalsBuffer.rewind();
 	}
 }

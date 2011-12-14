@@ -64,11 +64,15 @@ public class BoundingBox {
 	/**
 	 * render everything inside this bounding box
 	 */
-	public void render(GLAutoDrawable drawable,float x, float y, float z)
+	public void render(GLAutoDrawable drawable,float x, float y, float z, int rendermode)
 	{
 		for(int i=0; i<blocks.size(); i++)
 		{
-			blocks.get(i).render(drawable);
+			if(rendermode == 0)
+				blocks.get(i).renderVertexArray(drawable);
+
+			else if(rendermode == 1)
+				blocks.get(i).renderVertex3f(drawable);
 		}
 	}
 }

@@ -27,6 +27,8 @@ public class Graphics implements GLEventListener, KeyListener
     private float cameraLYPosition = cameraYPosition;
     private float cameraLZPosition = cameraZPosition - zoom;
 
+	private int rendermode = 0;
+
 	Camera camera;
       
     public Graphics()
@@ -143,7 +145,7 @@ public class Graphics implements GLEventListener, KeyListener
      */
     private void drawGraph(GLAutoDrawable drawable)
     {
-    	blockworld.render(drawable, (float)camera.getXPos(), (float)camera.getYPos(), (float)camera.getZPos(), (float)camera.getPitch());
+    	blockworld.render(drawable, (float)camera.getXPos(), (float)camera.getYPos(), (float)camera.getZPos(), (float)camera.getPitch(), rendermode);
     }
     
 	@Override
@@ -233,14 +235,27 @@ public class Graphics implements GLEventListener, KeyListener
         {
             camera.strafeLeft(0.5);
             camera.look(10);
-
-			System.out.print("moving left");
         }
 
         if(keys['d'])
         {
             camera.strafeRight(0.5);
             camera.look(10);
+        }
+
+		if(keys['r'])
+        {
+			if(rendermode == 0)
+			{
+				rendermode = 1;
+				System.out.print("changed rendermode to vertex array \n");
+			}
+
+			else if(rendermode == 1)
+			{
+				rendermode = 0;
+				System.out.print("changed rendermode to vertex3f \n");
+			}
         }
 	}
 }

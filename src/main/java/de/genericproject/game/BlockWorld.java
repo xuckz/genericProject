@@ -1,14 +1,13 @@
 package de.genericproject.game;
 
-import javax.media.opengl.GLAutoDrawable;
-import java.util.Vector;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import de.genericproject.game.fileimport.ModelReader;
 import de.genericproject.game.fileimport.VoxelData;
 import de.genericproject.game.fileimport.binvox.BinvoxReader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.media.opengl.GLAutoDrawable;
+import java.util.Vector;
 
 public class BlockWorld {
 	final static Logger log = LoggerFactory.getLogger(BlockWorld.class);
@@ -151,7 +150,7 @@ public class BlockWorld {
 	 * render method. render this block world
 	 * @param drawable
 	 */
-	public void render(GLAutoDrawable drawable, float x, float y, float z, float angle)
+	public void render(GLAutoDrawable drawable, float x, float y, float z, float angle, int rendermode)
 	{	
 		framecounter++;
 		if(framecounter > 40)
@@ -161,7 +160,7 @@ public class BlockWorld {
 		for(int i=0; i<boundingBoxes.size(); i++)
 		{
 			if(boundingBoxes.get(i).isVisible(x, y, z, angle) )
-				boundingBoxes.get(i).render(drawable, x, y, z);
+				boundingBoxes.get(i).render(drawable, x, y, z, rendermode);
 		}
 		if(framecounter > 40)
 		{
