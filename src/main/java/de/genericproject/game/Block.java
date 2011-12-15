@@ -178,10 +178,10 @@ public class Block {
 
 	private void setUpVertexArrays(float x, float y, float z)
 	{
-		x = x/2;
-		y = y/2;
-		z = z/2;
-
+		x *= BOX_SIZE;
+		y *= BOX_SIZE;
+		z *= BOX_SIZE;
+		
 		indices = new int[]
 		{
 			0,1,2,3,
