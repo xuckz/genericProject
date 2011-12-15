@@ -5,11 +5,19 @@ import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
 import javax.media.opengl.glu.GLU;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import de.genericproject.game.fileimport.VoxelData;
+
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 public class Graphics implements GLEventListener, KeyListener
 {
+	final static Logger log = LoggerFactory.getLogger(Graphics.class);
+	
     private GLU glu;
     private int w, h;
     
@@ -19,7 +27,7 @@ public class Graphics implements GLEventListener, KeyListener
 	private boolean[] keys;
 
 	private int rendermode = 0;
-
+	
 	Camera camera;
       
     public Graphics()
@@ -37,6 +45,7 @@ public class Graphics implements GLEventListener, KeyListener
     	light1 = new LightSource(GL2.GL_LIGHT1, 3.4f, 14f, 2.2f, 1f);
     	light1.setColorAmbient(0.2f, 0.15f, 0.15f, 0.3f);
     	light1.setColorSpecular(0.8f, 0.8f, 0.8f, 0.8f);
+
     }
     
     /**
@@ -235,13 +244,13 @@ public class Graphics implements GLEventListener, KeyListener
 			if(rendermode == 1)
 			{
 				rendermode = 0;
-				System.out.print("changed rendermode to vertex array \n");
+				log.info("changed rendermode to vertex array \n");
 			}
 
 			else if(rendermode == 0)
 			{
 				rendermode = 1;
-				System.out.print("changed rendermode to vertex3f \n");
+				log.info("changed rendermode to vertex3f \n");
 			}
         }
 	}

@@ -34,7 +34,7 @@ public class BlockWorld {
 		if(v != null) {
 			addModel(v, -30, -50, 2);
 		}
-		System.out.println("model loaded. containing "+blocks.size()+" blocks");
+		log.debug("model loaded. containing "+blocks.size()+" blocks");
 		
 		for(int x = -99; x < 100; x++)
 		{
@@ -54,7 +54,7 @@ public class BlockWorld {
 		blocks.add(new Block(0, 1, -1, Block.TYPE_ROCK));
 		blocks.add(new Block(0, 1, 1, Block.TYPE_ROCK));
 		
-		System.out.println("blockworld created. containing "+blocks.size()+" blocks");
+		log.debug("blockworld created. containing "+blocks.size()+" blocks");
 	}
 	
 	/**
@@ -160,13 +160,12 @@ public class BlockWorld {
 		}
 		for(int i=0; i<boundingBoxes.size(); i++)
 		{
-			// TODO: for each bounding box check if it's inside the camera frustum
 			if(camera.isBoundingBoxVisible(boundingBoxes.get(i)) )
 				boundingBoxes.get(i).render(drawable, rendermode);
 		}
 		if(framecounter > 40)
 		{
-			System.out.println("rendered "+Block.debug_counter+" blocks");
+			log.debug("rendered "+Block.debug_counter+" blocks");
 			framecounter = 0;
 		}
 	}
