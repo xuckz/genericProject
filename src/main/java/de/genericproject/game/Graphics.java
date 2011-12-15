@@ -12,25 +12,11 @@ public class Graphics implements GLEventListener, KeyListener
 {
     private GLU glu;
     private int w, h;
-    private float angle = 0.0f;
-    
-    private float cam_position_x;
-    private float cam_position_y;
-    private float cam_position_z;
     
     private BlockWorld blockworld;
     private LightSource light1;
 
 	private boolean[] keys;
-
-	private float zoom = 10.0f;
-    private float cameraXPosition = 0.0f;
-    private float cameraYPosition = 0.0f;
-    private float cameraZPosition = 10.0f;
-
-    private float cameraLXPosition = cameraXPosition;
-    private float cameraLYPosition = cameraYPosition;
-    private float cameraLZPosition = cameraZPosition - zoom;
 
 	private int rendermode = 0;
 
@@ -197,9 +183,6 @@ public class Graphics implements GLEventListener, KeyListener
     {
         if(keys['w'])
         {
-            cameraZPosition -= 0.5;
-            cameraLZPosition -= 0.5;
-
             camera.moveForward(0.5);
             camera.look(10);
 
@@ -207,10 +190,7 @@ public class Graphics implements GLEventListener, KeyListener
 
         if(keys['s'])
         {
-            cameraZPosition += 0.5;
-            cameraLZPosition += 0.5;
-
-            camera.moveForward(-0.5);
+                     camera.moveForward(-0.5);
             camera.look(10);
         }
 
