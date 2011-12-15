@@ -95,9 +95,13 @@ public class Block {
 	{
 		GL2 gl = drawable.getGL().getGL2();
 
+	  	gl.glPushMatrix();
+    	gl.glTranslatef(pos_x * BOX_SIZE, pos_y * BOX_SIZE, pos_z * BOX_SIZE);
+		
 		gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_AMBIENT, COLOR_MAP[type], 0);
     	gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_SPECULAR, COLOR_MAP[type], 0);
     	gl.glMaterialf(GL2.GL_FRONT, GL2.GL_SHININESS, 0.2f);
+    	
 
 		// Enable and specificy pointers to vertex arrays
 		gl.glEnableClientState(GL2.GL_VERTEX_ARRAY);
@@ -112,6 +116,8 @@ public class Block {
 		gl.glDisableClientState(GL2.GL_VERTEX_ARRAY);
 		gl.glDisableClientState(GL2.GL_INDEX_ARRAY);
 		//gl.glDisableClientState(GL2.GL_COLOR_ARRAY);
+		
+		gl.glPopMatrix();
 	}
 
 	public void renderVertex3f(GLAutoDrawable drawable)
@@ -177,28 +183,24 @@ public class Block {
 
 	private void setUpVertexArrays(float x, float y, float z)
 	{
-		x *= BOX_SIZE;
-		y *= BOX_SIZE;
-		z *= BOX_SIZE;
-		
+		// 0 1 2 3 4 5 6 7
+		// A B C D E F G H 
 		indices = new int[]
 		{
-			0,1,2,3,
-			4,5,6,7,
-			8,9,10,11,
-			12,13,14,15,
-			16,17,18,19,
-			20,21,22,23
+			0,1,2,3,		// bottom ABCD
+			0,3,7,4,		// front ADHE
+			0,4,5,1,		// left AEFB
+			1,5,6,2,		// back BFGC
+			3,2,6,7,		// right DCGH
+			4,7,6,5		// top EHGF
 		};
 
 		vertices = new float[]
 		{
-			BOX_SIZE + x, 	BOX_SIZE + y , 	0f + z , 			0f + x , 		BOX_SIZE + y, 	0f + z,  			0f + x, 		0f + y, 		0f + z,  		BOX_SIZE + x, 	0f + y, 		0f + z,        	// h-e-a-d
-			BOX_SIZE + x, 	BOX_SIZE + y , 	0f + z, 			BOX_SIZE + x , 	0f + y, 		0f + z, 			BOX_SIZE + x, 	0f + y, 		BOX_SIZE + z, 	BOX_SIZE + x, 	BOX_SIZE + y, 	BOX_SIZE + z, 	// h-d-c-g
-			BOX_SIZE + x,	BOX_SIZE + y , 	0f + z, 			BOX_SIZE + x , 	BOX_SIZE + y, 	BOX_SIZE + z,  		0f + x, 		BOX_SIZE + y, 	BOX_SIZE + z,  	0f + x, 		BOX_SIZE + y, 	0f + z,        	// h-g-f-e
-			0f + x, 		BOX_SIZE + y , 	0f + z,  			0f + x , 		BOX_SIZE + y, 	BOX_SIZE + z,  		0f + x, 		0f + y, 		BOX_SIZE + z,  	0f + x, 		0f + y, 		0f + z,    		// e-f-b-a
-			0f + x, 		0f + y, 		BOX_SIZE + z ,  	BOX_SIZE + x , 	0f + y, 		BOX_SIZE + z,  		BOX_SIZE + x, 	0f + y, 		0f + z,  		0f + x, 		0f + y, 		0f + z,    		// b-c-d-a
-			BOX_SIZE + x, 	0f + y , 		BOX_SIZE + z ,  	0f + x , 		0f + y, 		BOX_SIZE + z,  		0f + x , 		BOX_SIZE + y, 	BOX_SIZE + z,  	BOX_SIZE + x, 	BOX_SIZE + y, 	BOX_SIZE + z  	// c-b-f-g
+			BOX_POINT_A[0], BOX_POINT_A[1], BOX_POINT_A[2], BOX_POINT_B[0], BOX_POINT_B[1], BOX_POINT_B[2], 
+			BOX_POINT_C[0], BOX_POINT_C[1], BOX_POINT_C[2], BOX_POINT_D[0], BOX_POINT_D[1], BOX_POINT_D[2],
+			BOX_POINT_E[0], BOX_POINT_E[1], BOX_POINT_E[2], BOX_POINT_F[0], BOX_POINT_F[1], BOX_POINT_F[2],
+			BOX_POINT_G[0], BOX_POINT_G[1], BOX_POINT_G[2], BOX_POINT_H[0], BOX_POINT_H[1], BOX_POINT_H[2] 
 		};
 
 		vertexBuffer =
