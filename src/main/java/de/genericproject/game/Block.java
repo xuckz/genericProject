@@ -8,7 +8,6 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
 public class Block {
-// test to push project to github
 	static int debug_counter;
 
 	float pos_x;
