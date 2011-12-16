@@ -67,7 +67,7 @@ public class BoundingBox {
 	 */
 	public void render(GLAutoDrawable drawable, int rendermode)
 	{
-		if(rendermode == 0)
+		if(rendermode == RenderModes.VERTEYARRAY)
 		{
 			GL2 gl = drawable.getGL().getGL2();
 			// Enable and specificy pointers to vertex arrays
@@ -81,12 +81,12 @@ public class BoundingBox {
 			gl.glDisableClientState(GL2.GL_INDEX_ARRAY);
 			//gl.glDisableClientState(GL2.GL_NORMAL_ARRAY);
 		}
-		else if(rendermode == 1)
+		else if(rendermode == RenderModes.VERTEX3F)
 		{
 			for(int i=0; i<blocks.size(); i++)
 				blocks.get(i).renderVertex3f(drawable);
 		}
-		else if(rendermode == 2)
+		else if(rendermode == RenderModes.DISPLAYLIST)
 		{
 			for(int i=0; i<blocks.size(); i++)
 				blocks.get(i).renderDisplayList(drawable);

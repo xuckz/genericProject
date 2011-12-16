@@ -31,12 +31,6 @@ public class Graphics implements GLEventListener, KeyListener
 	private int debug_fps_counter;
 	private long debug_fps_last_time;
 	
-	private final static int RENDERMODE_VERTEYARRAY = 0;
-	private final static int RENDERMODE_VERTEX3F = 1;
-	private final static int RENDERMODE_DISPLAYLIST = 2;
-	
-	private final static String RENDERMODE_STRINGS[] = {"VertexArray", "Vertex3f", "DisplayList"};
-	
 	Camera camera;
       
     public Graphics()
@@ -117,7 +111,7 @@ public class Graphics implements GLEventListener, KeyListener
         debug_fps_counter++;
         if(debug_fps_counter > 40)
         {
-        	log.debug("time for 40 frames with mode "+RENDERMODE_STRINGS[rendermode]+" :"+(System.currentTimeMillis()-debug_fps_last_time)+"ms");
+        	log.debug("time for 40 frames with mode "+RenderModes.STRINGREPRESENTATION[rendermode]+" :"+(System.currentTimeMillis()-debug_fps_last_time)+"ms");
         	debug_fps_counter = 0;
         	debug_fps_last_time = System.currentTimeMillis();
         }
@@ -262,9 +256,9 @@ public class Graphics implements GLEventListener, KeyListener
 		if(keys['r'])
         {
 			rendermode++;
-			if(rendermode > RENDERMODE_DISPLAYLIST)
-				rendermode = RENDERMODE_VERTEYARRAY;
-			log.info("switch rendermode to "+RENDERMODE_STRINGS[rendermode]);
+			if(rendermode > RenderModes.LAST)
+				rendermode = RenderModes.FIRST;
+			log.info("switch rendermode to "+RenderModes.STRINGREPRESENTATION[rendermode]);
         }
 	}
 }
