@@ -65,6 +65,7 @@ public class Graphics implements GLEventListener, KeyListener
         
         // build the display list
         Block.createDisplayList(gl);
+        Block.setUpVertexArrays();
         
         gl.glShadeModel(GL.GL_LINE_SMOOTH);
         gl.glClearColor(0.0f,0.0f,0.0f,1.0f);

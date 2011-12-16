@@ -6,6 +6,7 @@ import de.genericproject.game.fileimport.binvox.BinvoxReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
 import java.util.Vector;
 
@@ -14,6 +15,11 @@ public class BlockWorld {
 
 	Vector<Block> blocks;
 	Vector<BoundingBox> boundingBoxes;
+	
+	final static int DIM_X_LOW = -199;
+	final static int DIM_X_HIGH = 200;
+	final static int DIM_Z_LOW = -199;
+	final static int DIM_Z_HIGH = 200;
 	
 	public BlockWorld()
 	{
@@ -36,9 +42,9 @@ public class BlockWorld {
 		}
 		log.debug("model loaded. containing "+blocks.size()+" blocks");
 		
-		for(int x = -99; x < 100; x++)
+		for(int x = DIM_X_LOW; x < DIM_X_HIGH; x++)
 		{
-			for(int z = - 99; z < 100; z++)
+			for(int z = DIM_Z_LOW; z < DIM_Z_HIGH; z++)
 			{
 				blocks.add(new Block(x, 0, z, (int)(Math.random()*3)));
 				if(Math.random() < 0.002f)
@@ -115,9 +121,9 @@ public class BlockWorld {
 	 */
 	private void divideIntoBoudingBoxes()
 	{
-		for(int x=-99; x < 100; x+=100)
+		for(int x=DIM_X_LOW; x < DIM_X_HIGH; x+=100)
 		{
-			for(int z=-99; z < 100; z+=100)
+			for(int z=DIM_Z_LOW; z < DIM_Z_HIGH; z+=100)
 			{
 				boundingBoxes.add(new BoundingBox(x, 0, z, 100));
 			}
@@ -153,22 +159,47 @@ public class BlockWorld {
 	 */
 	public void render(GLAutoDrawable drawable, Camera camera, int rendermode)
 	{	
+		GL2 gl = drawable.getGL().getGL2();
 		framecounter++;
 		if(framecounter > 40)
 		{
 			Block.debug_counter = 0;
+			boxesDrawn = 0;
+		}
+		if(rendermode == RenderModes.VERTEYARRAY)
+		{
+			//	Enable and specificy pointers to vertex arrays
+			gl.glEnableClientState(GL2.GL_VERTEX_ARRAY);
+			gl.glEnableClientState(GL2.GL_INDEX_ARRAY);
+			//gl.glEnableClientState(GL2.GL_NORMAL_ARRAY);
 		}
 		for(int i=0; i<boundingBoxes.size(); i++)
 		{
+			
+				
 			if(camera.isBoundingBoxVisible(boundingBoxes.get(i)) )
+			{
 				boundingBoxes.get(i).render(drawable, rendermode);
+				boxesDrawn++;
+			}
+		}
+		if(rendermode == RenderModes.VERTEYARRAY)
+		{
+			gl.glDisableClientState(GL2.GL_VERTEX_ARRAY);
+			gl.glDisableClientState(GL2.GL_INDEX_ARRAY);
+			//gl.glDisableClientState(GL2.GL_NORMAL_ARRAY);
+		}
+		else if(rendermode == RenderModes.DISPLAYLIST)
+		{
+			gl.glFlush();
 		}
 		if(framecounter > 40)
 		{
-			log.debug("rendered "+Block.debug_counter+" blocks");
+			log.debug("rendered "+Block.debug_counter+" blocks in "+boxesDrawn+"/"+boundingBoxes.size());
 			framecounter = 0;
 		}
 	}
 	
 	int framecounter;
+	int boxesDrawn;
 }

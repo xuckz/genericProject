@@ -41,15 +41,10 @@ public class Block {
 	 *  A -- D
 	 */
 
-	// vertex coords array
-	float vertices[];
-	int indices[];
-	float normals[];
-
-	private FloatBuffer vertexBuffer;
-	private FloatBuffer colorBuffer;
-	private FloatBuffer normalsBuffer;
-	private IntBuffer indicesBuffer;
+	private static FloatBuffer vertexBuffer;
+	private static FloatBuffer colorBuffer;
+	private static FloatBuffer normalsBuffer;
+	private static IntBuffer indicesBuffer;
 
 	final static float[] COLOR_DIRT = {0.82f, 0.48f, 0.18f, 1f};
 	final static float[] COLOR_ROCK = {0.67f, 0.63f, 0.60f, 1f};
@@ -69,6 +64,26 @@ public class Block {
 	final static float[] BOX_POINT_H = {BOX_SIZE, BOX_SIZE, 0f};
 
 	final static float[][] COLOR_MAP = {COLOR_DIRT, COLOR_ROCK, COLOR_SAND, COLOR_WOOD, COLOR_LEAF, COLOR_GRASS, COLOR_WATER};
+	
+	// vertex coords array
+	final static float vertices[] = {
+			BOX_POINT_A[0], BOX_POINT_A[1], BOX_POINT_A[2], BOX_POINT_B[0], BOX_POINT_B[1], BOX_POINT_B[2], 
+			BOX_POINT_C[0], BOX_POINT_C[1], BOX_POINT_C[2], BOX_POINT_D[0], BOX_POINT_D[1], BOX_POINT_D[2],
+			BOX_POINT_E[0], BOX_POINT_E[1], BOX_POINT_E[2], BOX_POINT_F[0], BOX_POINT_F[1], BOX_POINT_F[2],
+			BOX_POINT_G[0], BOX_POINT_G[1], BOX_POINT_G[2], BOX_POINT_H[0], BOX_POINT_H[1], BOX_POINT_H[2] 
+		};
+	// 0 1 2 3 4 5 6 7
+	// A B C D E F G H 
+	final static int indices[] = {
+			0,1,2,3,		// bottom ABCD
+			0,3,7,4,		// front ADHE
+			0,4,5,1,		// left AEFB
+			1,5,6,2,		// back BFGC
+			3,2,6,7,		// right DCGH
+			4,7,6,5		// top EHGF
+		};
+	final static float normals[] = {};
+	
 	/**
 	 * map to retrieve the correct color for each block type
 	 */
@@ -82,8 +97,6 @@ public class Block {
 	 */
 	public Block(float x, float y, float z, int type)
 	{
-		setUpVertexArrays(x,y,z);
-
 		pos_x = x;
 		pos_y = y;
 		pos_z = z;
@@ -206,33 +219,8 @@ public class Block {
     	gl.glPopMatrix();
 	}
 
-	private void setUpVertexArrays(float x, float y, float z)
+	public static void setUpVertexArrays()
 	{
-		// 0 1 2 3 4 5 6 7
-		// A B C D E F G H 
-		indices = new int[]
-		{
-			0,1,2,3,		// bottom ABCD
-			0,3,7,4,		// front ADHE
-			0,4,5,1,		// left AEFB
-			1,5,6,2,		// back BFGC
-			3,2,6,7,		// right DCGH
-			4,7,6,5		// top EHGF
-		};
-
-		vertices = new float[]
-		{
-			BOX_POINT_A[0], BOX_POINT_A[1], BOX_POINT_A[2], BOX_POINT_B[0], BOX_POINT_B[1], BOX_POINT_B[2], 
-			BOX_POINT_C[0], BOX_POINT_C[1], BOX_POINT_C[2], BOX_POINT_D[0], BOX_POINT_D[1], BOX_POINT_D[2],
-			BOX_POINT_E[0], BOX_POINT_E[1], BOX_POINT_E[2], BOX_POINT_F[0], BOX_POINT_F[1], BOX_POINT_F[2],
-			BOX_POINT_G[0], BOX_POINT_G[1], BOX_POINT_G[2], BOX_POINT_H[0], BOX_POINT_H[1], BOX_POINT_H[2] 
-		};
-		
-		normals = new float[]
-		{
-				0f, -1f, 0f, 
-		};
-
 		vertexBuffer =
 			ByteBuffer
 				.allocateDirect(vertices.length * 4)
