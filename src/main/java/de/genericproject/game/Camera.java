@@ -197,6 +197,9 @@ public class Camera
     
     public boolean isBoundingBoxVisible(BoundingBox box)
     {
-    	return frustum.isPointInside(box.getBottomLeftPoint()) || frustum.isPointInside(box.getTopRightPoint());
+    	return (frustum.isPointInside(box.getBottomLeftFrontPoint()) || frustum.isPointInside(box.getTopRightBackPoint())
+    			|| frustum.isPointInside(box.getBottomLeftBackPoint()) || frustum.isPointInside(box.getBottomRightFrontPoint())
+    			|| frustum.isPointInside(box.getBottomRightBackPoint()) || frustum.isPointInside(box.getTopLeftFrontPoint())
+    			|| frustum.isPointInside(box.getTopLeftBackPoint()) || frustum.isPointInside(box.getTopRightFrontPoint()) );
     }
 }

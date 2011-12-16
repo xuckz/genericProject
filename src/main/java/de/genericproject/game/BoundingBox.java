@@ -9,15 +9,27 @@ import java.util.Vector;
 public class BoundingBox {
 
 	int size;
-	Vector3f bottomLeftPoint;
-	Vector3f topRightPoint;
+	Vector3f bottomLeftFrontPoint;
+	Vector3f bottomLeftBackPoint;
+	Vector3f bottomRightFrontPoint;
+	Vector3f bottomRightBackPoint;
+	Vector3f topLeftFrontPoint;
+	Vector3f topLeftBackPoint;
+	Vector3f topRightFrontPoint;
+	Vector3f topRightBackPoint;
 	
 	Vector<Block> blocks;
 	
 	public BoundingBox(int x, int y, int z, int size)
 	{
-		bottomLeftPoint = new Vector3f(x, y, z);
-		topRightPoint = new Vector3f(x+size, y+size, z+size);
+		bottomLeftFrontPoint = new Vector3f(x, y, z);
+		bottomLeftBackPoint = new Vector3f(x, y, z+size);
+		bottomRightFrontPoint = new Vector3f(x+size, y, z);
+		bottomRightBackPoint = new Vector3f(x+size, y, z+size);
+		topLeftFrontPoint = new Vector3f(x, y+size, z);
+		topLeftBackPoint = new Vector3f(x, y+size, z+size);
+		topRightFrontPoint = new Vector3f(x+size, y+size, z);
+		topRightBackPoint = new Vector3f(x+size, y+size, z+size);
 		this.size = size;
 		blocks = new Vector<Block>();
 	}
@@ -44,17 +56,17 @@ public class BoundingBox {
 	
 	private boolean withinRangeX(int x)
 	{
-		return (x >= bottomLeftPoint.getX() && x <= topRightPoint.getX());
+		return (x >= bottomLeftFrontPoint.getX() && x <= topRightBackPoint.getX());
 	}
 	
 	private boolean withinRangeY(int y)
 	{
-		return (y >= bottomLeftPoint.getY() && y <= topRightPoint.getY());
+		return (y >= bottomLeftFrontPoint.getY() && y <= topRightBackPoint.getY());
 	}
 	
 	private boolean withinRangeZ(int z)
 	{
-		return (z >= bottomLeftPoint.getZ() && z <= topRightPoint.getZ());
+		return (z >= bottomLeftFrontPoint.getZ() && z <= topRightBackPoint.getZ());
 	}
 	
 	public void clearAll()
@@ -84,13 +96,43 @@ public class BoundingBox {
 		}
 	}
 	
-	public Vector3f getBottomLeftPoint()
+	public Vector3f getBottomLeftFrontPoint()
 	{
-		return bottomLeftPoint;
+		return bottomLeftFrontPoint;
 	}
 	
-	public Vector3f getTopRightPoint()
+	public Vector3f getBottomLeftBackPoint()
 	{
-		return topRightPoint;
+		return bottomLeftBackPoint;
+	}
+	
+	public Vector3f getBottomRightFrontPoint()
+	{
+		return bottomRightFrontPoint;
+	}
+	
+	public Vector3f getBottomRightBackPoint()
+	{
+		return bottomRightBackPoint;
+	}
+	
+	public Vector3f getTopLeftFrontPoint()
+	{
+		return topLeftFrontPoint;
+	}
+	
+	public Vector3f getTopLeftBackPoint()
+	{
+		return topLeftBackPoint;
+	}
+	
+	public Vector3f getTopRightFrontPoint()
+	{
+		return topRightFrontPoint;
+	}
+	
+	public Vector3f getTopRightBackPoint()
+	{
+		return topRightBackPoint;
 	}
 }
