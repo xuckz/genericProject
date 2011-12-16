@@ -28,6 +28,15 @@ public class Graphics implements GLEventListener, KeyListener
 
 	private int rendermode = 0;
 	
+	private int debug_fps_counter;
+	private long debug_fps_last_time;
+	
+	private final static int RENDERMODE_VERTEYARRAY = 0;
+	private final static int RENDERMODE_VERTEX3F = 1;
+	private final static int RENDERMODE_DISPLAYLIST = 2;
+	
+	private final static String RENDERMODE_STRINGS[] = {"VertexArray", "Vertex3f", "DisplayList"};
+	
 	Camera camera;
       
     public Graphics()
@@ -45,7 +54,8 @@ public class Graphics implements GLEventListener, KeyListener
     	light1 = new LightSource(GL2.GL_LIGHT1, 3.4f, 14f, 2.2f, 1f);
     	light1.setColorAmbient(0.2f, 0.15f, 0.15f, 0.3f);
     	light1.setColorSpecular(0.8f, 0.8f, 0.8f, 0.8f);
-
+    	debug_fps_counter = 0;
+    	debug_fps_last_time = System.currentTimeMillis();
     }
     
     /**
@@ -58,6 +68,9 @@ public class Graphics implements GLEventListener, KeyListener
         
         GL2 gl = drawable.getGL().getGL2();
         glu = new GLU();
+        
+        // build the display list
+        Block.createDisplayList(gl);
         
         gl.glShadeModel(GL.GL_LINE_SMOOTH);
         gl.glClearColor(0.0f,0.0f,0.0f,1.0f);
@@ -101,6 +114,13 @@ public class Graphics implements GLEventListener, KeyListener
         gl.glLoadIdentity();												// Reset The Modelview Matrix     
 
         drawScene(drawable);												// Draw the scene
+        debug_fps_counter++;
+        if(debug_fps_counter > 40)
+        {
+        	log.debug("time for 40 frames with mode "+RENDERMODE_STRINGS[rendermode]+" :"+(System.currentTimeMillis()-debug_fps_last_time)+"ms");
+        	debug_fps_counter = 0;
+        	debug_fps_last_time = System.currentTimeMillis();
+        }
     }
 
     /**
@@ -241,17 +261,10 @@ public class Graphics implements GLEventListener, KeyListener
 
 		if(keys['r'])
         {
-			if(rendermode == 1)
-			{
-				rendermode = 0;
-				log.info("changed rendermode to vertex array \n");
-			}
-
-			else if(rendermode == 0)
-			{
-				rendermode = 1;
-				log.info("changed rendermode to vertex3f \n");
-			}
+			rendermode++;
+			if(rendermode > RENDERMODE_DISPLAYLIST)
+				rendermode = RENDERMODE_VERTEYARRAY;
+			log.info("switch rendermode to "+RENDERMODE_STRINGS[rendermode]);
         }
 	}
 }

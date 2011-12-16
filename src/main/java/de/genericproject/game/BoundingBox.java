@@ -2,6 +2,7 @@ package de.genericproject.game;
 
 import de.genericproject.game.graphic_utils.Vector3f;
 
+import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
 import java.util.Vector;
 
@@ -66,13 +67,30 @@ public class BoundingBox {
 	 */
 	public void render(GLAutoDrawable drawable, int rendermode)
 	{
-		for(int i=0; i<blocks.size(); i++)
+		if(rendermode == 0)
 		{
-			if(rendermode == 0)
+			GL2 gl = drawable.getGL().getGL2();
+			// Enable and specificy pointers to vertex arrays
+			gl.glEnableClientState(GL2.GL_VERTEX_ARRAY);
+			gl.glEnableClientState(GL2.GL_INDEX_ARRAY);
+			//gl.glEnableClientState(GL2.GL_NORMAL_ARRAY);
+			for(int i=0; i<blocks.size(); i++)
 				blocks.get(i).renderVertexArray(drawable);
-
-			else if(rendermode == 1)
+			
+			gl.glDisableClientState(GL2.GL_VERTEX_ARRAY);
+			gl.glDisableClientState(GL2.GL_INDEX_ARRAY);
+			//gl.glDisableClientState(GL2.GL_NORMAL_ARRAY);
+		}
+		else if(rendermode == 1)
+		{
+			for(int i=0; i<blocks.size(); i++)
 				blocks.get(i).renderVertex3f(drawable);
+		}
+		else if(rendermode == 2)
+		{
+			for(int i=0; i<blocks.size(); i++)
+				blocks.get(i).renderDisplayList(drawable);
+			drawable.getGL().getGL2().glFlush();
 		}
 	}
 	

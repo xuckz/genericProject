@@ -9,6 +9,8 @@ import java.nio.IntBuffer;
 
 public class Block {
 	static int debug_counter;
+	
+	private static int display_list_id;
 
 	float pos_x;
 	float pos_y;
@@ -42,6 +44,7 @@ public class Block {
 	// vertex coords array
 	float vertices[];
 	int indices[];
+	float normals[];
 
 	private FloatBuffer vertexBuffer;
 	private FloatBuffer colorBuffer;
@@ -86,6 +89,14 @@ public class Block {
 		pos_z = z;
 		this.type = type;
 	}
+	
+	public static void createDisplayList(GL2 gl)
+	{
+		display_list_id = gl.glGenLists(1);
+		gl.glNewList(display_list_id, GL2.GL_COMPILE);
+		drawBox(gl);
+		gl.glEndList();
+	}
 
 	/**
 	 * render method. render this single block
@@ -93,7 +104,10 @@ public class Block {
 	 */
 	public void renderVertexArray(GLAutoDrawable drawable)
 	{
+
+		debug_counter++;
 		GL2 gl = drawable.getGL().getGL2();
+		boolean version_1_5 = gl.isExtensionAvailable("GL_VERSION_1_5");
 
 	  	gl.glPushMatrix();
     	gl.glTranslatef(pos_x * BOX_SIZE, pos_y * BOX_SIZE, pos_z * BOX_SIZE);
@@ -101,21 +115,12 @@ public class Block {
 		gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_AMBIENT, COLOR_MAP[type], 0);
     	gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_SPECULAR, COLOR_MAP[type], 0);
     	gl.glMaterialf(GL2.GL_FRONT, GL2.GL_SHININESS, 0.2f);
-    	
-
-		// Enable and specificy pointers to vertex arrays
-		gl.glEnableClientState(GL2.GL_VERTEX_ARRAY);
-		gl.glEnableClientState(GL2.GL_INDEX_ARRAY);
-		//gl.glEnableClientState(GL2.GL_COLOR_ARRAY);
 
 		gl.glVertexPointer(3, GL2.GL_FLOAT, 0, vertexBuffer);
 		gl.glIndexPointer(GL2.GL_INT, 0, indicesBuffer);
+		//gl.glNormalPointer(GL2.GL_FLOAT, 0, normalsBuffer);
 		//gl.glColorPointer(3, GL2.GL_FLOAT, 0, colorBuffer);
 		gl.glDrawElements(GL2.GL_QUADS, 24, GL2.GL_UNSIGNED_INT, indicesBuffer);
-
-		gl.glDisableClientState(GL2.GL_VERTEX_ARRAY);
-		gl.glDisableClientState(GL2.GL_INDEX_ARRAY);
-		//gl.glDisableClientState(GL2.GL_COLOR_ARRAY);
 		
 		gl.glPopMatrix();
 	}
@@ -127,13 +132,17 @@ public class Block {
 
     	gl.glPushMatrix();
     	gl.glTranslatef(pos_x * BOX_SIZE, pos_y * BOX_SIZE, pos_z * BOX_SIZE);
-    	gl.glBegin(GL2.GL_QUADS);										// Begin drawing square bottom
-
-		//gl.glColor4f( COLOR_MAP[type][0], COLOR_MAP[type][1], COLOR_MAP[type][2], COLOR_MAP[type][3]);
-
     	gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_AMBIENT, COLOR_MAP[type], 0);
     	gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_SPECULAR, COLOR_MAP[type], 0);
     	gl.glMaterialf(GL2.GL_FRONT, GL2.GL_SHININESS, 0.2f);
+    	
+    	drawBox(gl);
+													// Finish drawing square bottom
+		gl.glPopMatrix();
+	}
+
+	private static void drawBox(GL2 gl) {
+		gl.glBegin(GL2.GL_QUADS);										// Begin drawing square bottom
 
     	// bottom ABCD
     	gl.glNormal3f(0f, -1f, 0f);
@@ -176,9 +185,25 @@ public class Block {
 		gl.glVertex3fv(BOX_POINT_H, 0);
 		gl.glVertex3fv(BOX_POINT_G, 0);
 		gl.glVertex3fv(BOX_POINT_F, 0);
+		gl.glEnd();	
+	}
+	
+	public void renderDisplayList(GLAutoDrawable drawable)
+	{
+		debug_counter++;
+		GL2 gl = drawable.getGL().getGL2();
 
-		gl.glEnd();														// Finish drawing square bottom
-		gl.glPopMatrix();
+    	gl.glPushMatrix();
+    	gl.glTranslatef(pos_x * BOX_SIZE, pos_y * BOX_SIZE, pos_z * BOX_SIZE);
+
+		//gl.glColor4f( COLOR_MAP[type][0], COLOR_MAP[type][1], COLOR_MAP[type][2], COLOR_MAP[type][3]);
+
+    	gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_AMBIENT, COLOR_MAP[type], 0);
+    	gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_SPECULAR, COLOR_MAP[type], 0);
+    	gl.glMaterialf(GL2.GL_FRONT, GL2.GL_SHININESS, 0.2f);
+    	
+    	gl.glCallList(display_list_id);
+    	gl.glPopMatrix();
 	}
 
 	private void setUpVertexArrays(float x, float y, float z)
@@ -201,6 +226,11 @@ public class Block {
 			BOX_POINT_C[0], BOX_POINT_C[1], BOX_POINT_C[2], BOX_POINT_D[0], BOX_POINT_D[1], BOX_POINT_D[2],
 			BOX_POINT_E[0], BOX_POINT_E[1], BOX_POINT_E[2], BOX_POINT_F[0], BOX_POINT_F[1], BOX_POINT_F[2],
 			BOX_POINT_G[0], BOX_POINT_G[1], BOX_POINT_G[2], BOX_POINT_H[0], BOX_POINT_H[1], BOX_POINT_H[2] 
+		};
+		
+		normals = new float[]
+		{
+				0f, -1f, 0f, 
 		};
 
 		vertexBuffer =
